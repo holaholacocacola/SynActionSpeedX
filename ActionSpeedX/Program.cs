@@ -40,27 +40,6 @@ namespace ActionSpeedX
             state.LoadOrder.AssertHasMod(ModKey.FromNameAndExtension("ActionSpeedX.esp"));
         }
 
-        private static List<FormKey> LoadPerks(ActionSpeedX.Settings patchSettings)
-        {
-            //set up perks to add. This should be done in Settings but w/e
-            List<FormKey> perksToAdd = new List<FormKey>();
-            if (patchSettings.AttackSpeed) perksToAdd.AddRange(ActionSpeedX.FormKeys.Perks.AttackSpeed);
-
-            if (patchSettings.MagickaRegen) perksToAdd.AddRange(ActionSpeedX.FormKeys.Perks.MagickaRegen);
-
-            if (patchSettings.MoveSpeed) perksToAdd.AddRange(ActionSpeedX.FormKeys.Perks.MoveSpeed);
-
-            if (patchSettings.RangedAttack) perksToAdd.AddRange(ActionSpeedX.FormKeys.Perks.RangedSpeed);
-
-            if (patchSettings.PowerAttacks) perksToAdd.AddRange(ActionSpeedX.FormKeys.Perks.PowerAttacks);
-
-            if (patchSettings.StaminaRegen) perksToAdd.AddRange(ActionSpeedX.FormKeys.Perks.StaminaRegen);
-
-            if (patchSettings.SpellCosts) perksToAdd.AddRange(ActionSpeedX.FormKeys.Perks.SpellCosts);
-
-            return perksToAdd;
-        }
-
         public static void RunPatch(IPatcherState<ISkyrimMod, ISkyrimModGetter> state)
         {
             
@@ -76,29 +55,9 @@ namespace ActionSpeedX
             if (!requiredFiles.SequenceEqual(foundFiles))
                 throw new Exception("Missing one of the following json files in the Data folder: armor_descriptions, armor_materials, races");
 
-            var availableRaces = JObject.Parse(File.ReadAllText(requiredFiles[2]));
             ActionSpeedX.Settings patchSettings = JsonConvert.DeserializeObject<ActionSpeedX.Settings>(File.ReadAllText(requiredFiles[3]));// This could fail if user messes with settings but w/e
 
-            /**
-             *  Load the races we want to use
-             * */
-            List<JToken> races;
-            JToken? defaultRaces = availableRaces.SelectToken("default");
-            if (defaultRaces == null) throw new Exception("Error reading races file");
 
-            races = defaultRaces.ToList();
-            if (patchSettings.Creatures)
-            {
-                JToken? creatures = availableRaces.SelectToken("creatures");
-                if (creatures != null) races.AddRange(creatures.ToList());
-            }
-
-            // see PatchNpc for usage
-            List<FormKey> perkstoAdd = LoadPerks(patchSettings);
-            if (perkstoAdd.Count() == 0)
-            {
-                throw new Exception("No settings enabled");
-            }
 
             // Armor Patcher. Adds keywords
             Console.WriteLine("Patching armors");
