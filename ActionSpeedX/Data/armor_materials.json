@@ -1,0 +1,58 @@
+{
+	"1": [
+		"ArmorDarkBrotherhood",
+		"ArmorMaterialHide",
+		"ArmorMaterialIron",
+		"ArmorMaterialIronBanded",
+		"ArmorMaterialStormcloak",
+		"ArmorMaterialStudded",
+		"ArmorMaterialThievesGuild",
+		"DLC1ArmorMaterialVampire",
+		"WAF_ArmorMaterialDraugr"
+	],
+	"2": [
+		"ArmorMaterialBearStormcloak",
+		"ArmorMaterialDwarven",
+		"ArmorMaterialElven",
+		"ArmorMaterialFalmer",
+		"ArmorMaterialForsworn",
+		"ArmorMaterialImperialHeavy",
+		"ArmorMaterialImperialLight",
+		"ArmorMaterialImperialStudded",
+		"ArmorMaterialLeather",
+		"ArmorMaterialMS02Forsworn",
+		"ArmorMaterialPenitus",
+		"ArmorMaterialSteel",
+		"ArmorNightingale",
+		"DLC1ArmorMaterialDawnguard",
+		"DLC1ArmorMaterialFalmerHardened",
+		"DLC1ArmorMaterialHunter",
+		"DLC2ArmorMaterialBonemoldHeavy",
+		"DLC2ArmorMaterialBonemoldLight",
+		"DLC2ArmorMaterialMoragTong",
+		"DLC2dunHaknirArmor"
+	],
+	"3": [
+		"ArmorMaterialBlades",
+		"ArmorMaterialElvenGilded",
+		"ArmorMaterialGlass",
+		"ArmorMaterialOrcish",
+		"ArmorMaterialScaled",
+		"ArmorMaterialSteelPlate",
+		"ArmorMaterialThievesGuildLeader",
+		"DLC1ArmorMaterielFalmerHeavy",
+		"DLC1ArmorMaterielFalmerHeavyOriginal",
+		"DLC2ArmorMaterialChitinHeavy",
+		"DLC2ArmorMaterialChitinLight",
+		"DLC2ArmorMaterialNordicHeavy",
+		"DLC2ArmorMaterialNordicLight"
+	],
+	"4": [
+		"ArmorMaterialDaedric",
+		"ArmorMaterialDragonplate",
+		"ArmorMaterialDragonscale",
+		"ArmorMaterialEbony",
+		"DLC2ArmorMaterialStalhrimHeavy",
+		"DLC2ArmorMaterialStalhrimLight"
+	]
+}
