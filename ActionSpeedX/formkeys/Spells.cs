@@ -6,22 +6,17 @@ namespace ActionSpeedX
 {
     public static partial class FormKeys
     {
-        
-
-        // This contains spells(abilities) for adamant that we need to rebalance. If one of these mods update, update the form id here
         /// <summary>
         /// This class contains abilities from adamant that touch staminaratemult, and movementspeed. It contains instructions on how to rebalance those abilities.
         /// It covers the following perks: Agility, Athletics, and also handles the Pilgrim of Akatash buff
         /// </summary>
         public static class AdamantSpells
         {
-
             /**
             Agility: Agility gives 50/100% stamina renegeration at level 40/60 with light armor. ASX nerfs stamina regen by 15/20% assuming your skill matches the armor tier. We nerf to 5%
             Athletics: Athletics Give 10/20% speed boost. The max light armor speed reduction from ASX is 10% when on level. We nerf it to give 1/2% total(3) speed which is ~equal to offsetting gauntlets
             Akatash: Akatosh gices a 10% speed boost. This is reduced to 3% (Enough to offset boots)
             */
-
 
             private static ModKey ModKey                = ModKey.FromNameAndExtension("Adamant.esp");         
             private static FormKey MAG_PerkAgility30    => Skyrim.ASpell.PerkWindWalkerStamina; // This will be reduced from 50% -> 5%. Affects stamina regeneration. Why magus why...
@@ -41,7 +36,6 @@ namespace ActionSpeedX
             };
         }
 
-        // This contains spells(abilities) for Ordinator that we need to rebalance. If one of these mods update, update the form id here
         /// <summary>
         /// This class contains abilities from ordinator that touch staminaratemult, and movementspeed. It contains instructions on how to rebalance those abilities.
         /// It covers the following perks: Windborne, Windrunner, Fight or Flight
@@ -65,14 +59,12 @@ namespace ActionSpeedX
             };
         }
 
-        // This contains spells(abilities) for Vokrii that we need to rebalance. If one of these mods update, update the form id here
         /// <summary>
         /// This class contains abilities from vokrii that touch staminaratemult, and movementspeed. It contains instructions on how to rebalance those abilities.
         /// It covers the following perks: Adrenaline, WardDancer, and WindRunner
         /// </summary>
         public static class VokriiSpells
         {
-
             /*
              * Adrenaline: Adrenaline gives a + 10% speed buff when consuming potions. We reduce this to 4% which enough to offset the penalty of low level cuirass
              * Warddancer: Wardancer gives a 10% speed buff fo blocking. We reduce this to 1% as we already give a passive speed bonus based on LA skill.
@@ -86,13 +78,12 @@ namespace ActionSpeedX
             private static FormKey VKR_Lia_Windrunner_Spell_Ab => ModKey.MakeFormKey(0x009B89); // Reduce move speed buff from 10% -> 1%
 
             public static List<SpellEffectModifier> StaminaSpells = new List<SpellEffectModifier> {};
-            public static List<SpellEffectModifier> MoveSpells = new List<SpellEffectModifier> {
+            public static List<SpellEffectModifier> MoveSpells    = new List<SpellEffectModifier> {
                 new SpellEffectModifier(VKR_Alc_Adrenaline_Spell_Ab, 0, 4.0f, "VKR_Alc_Adrenaline_Spell_Ab"),
                 new SpellEffectModifier(VKR_Lia_Wardancer_Spell_Ab, 2, 1.0f, "VKR_Lia_Wardancer_Spell_Ab"),
                 new SpellEffectModifier(VKR_Lia_Windrunner_Spell_Ab, 0, 1.0f, "VKR_Lia_Winrunner_Spell_Ab"),
 
             };
-
         }
 
         /// <summary>
@@ -112,8 +103,6 @@ namespace ActionSpeedX
                 this.magnitude = magnitude;
                 this.editorId = id;
             }
-
         }
-
     }
 }

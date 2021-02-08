@@ -1,13 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Synthesis;
 using Mutagen.Bethesda.Skyrim;
-using Mutagen.Bethesda.FormKeys.SkyrimSE;
-using Newtonsoft.Json.Linq;
-using Noggog;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -15,10 +11,6 @@ namespace ActionSpeedX
 {
     public class Program
     {
-
-        static ModKey Adamant = ModKey.FromNameAndExtension("Adamant.esp");
-        static ModKey Vokrii = ModKey.FromNameAndExtension("Vokrii - Minimalistic Perks of Skyrim.esp");
-        static ModKey Ordinator = ModKey.FromNameAndExtension("Ordinator - Perks Of Skyrim.esp");
 
         public static async Task<int> Main(string[] args)
         {
@@ -57,7 +49,12 @@ namespace ActionSpeedX
 
             ActionSpeedX.Settings patchSettings = JsonConvert.DeserializeObject<ActionSpeedX.Settings>(File.ReadAllText(requiredFiles[3]));// This could fail if user messes with settings but w/e
 
-
+            // PerkMod Patcher. Modifies magnitudes.
+            if (patchSettings.BalancePerkMods)
+            {
+                ActionSpeedX.SpellPatcher spellPatcher = new SpellPatcher(state, patchSettings);
+                if(!spellPatcher.PatchSpells()) throw new Exception("Error encountered while balancing perks. Check logs.");
+            }
 
             // Armor Patcher. Adds keywords
             Console.WriteLine("Patching armors");
@@ -69,79 +66,6 @@ namespace ActionSpeedX
             ActionSpeedX.NpcPatcher npcPatcher = new NpcPatcher(state, patchSettings);
             npcPatcher.PatchNpcs();
 
-
-            // PerkMod Patcher. Modifies magnitudes.
-            if (!patchSettings.BalancePerkMods) return;
-
-            // CHeck for adamant
-            if (state.LoadOrder.ContainsKey(Adamant))
-            {
-                Console.WriteLine("Adamant will be patched.");
-                bool success = RebalancePerks(state, patchSettings, ActionSpeedX.FormKeys.AdamantSpells.StaminaSpells, ActionSpeedX.FormKeys.AdamantSpells.MoveSpells);
-                if (!success) Console.WriteLine("Failed to patch adamant");
-            }
-
-            // Check for ordinator
-            if (state.LoadOrder.ContainsKey(Ordinator))
-            {
-                Console.WriteLine("Ordinator will be patched.");
-                bool success = RebalancePerks(state, patchSettings, ActionSpeedX.FormKeys.OrdinatorSpells.StaminaSpells, ActionSpeedX.FormKeys.OrdinatorSpells.MoveSpells);
-                if (!success) Console.WriteLine("Failed to patch ordinator");
-            }
-
-            // CHeck for vokrii
-            if (state.LoadOrder.ContainsKey(Vokrii))
-            {
-                Console.WriteLine("Vokrii will be patched.");
-                bool success = RebalancePerks(state, patchSettings, ActionSpeedX.FormKeys.VokriiSpells.StaminaSpells, ActionSpeedX.FormKeys.VokriiSpells.MoveSpells);
-                if (!success) Console.WriteLine("Failed to patch vokrii");
-            }
         }
-
-       
-        private static bool RebalancePerks(IPatcherState<ISkyrimMod, ISkyrimModGetter> state, ActionSpeedX.Settings patchSettings, List<FormKeys.SpellEffectModifier> staminaSpells, List<FormKeys.SpellEffectModifier> speedSpells)
-        {
-
-            bool hasError = false;
-            if (patchSettings.StaminaRegen)
-            {
-                foreach (var stamModifier in staminaSpells)
-                {
-                    if (!ModifySpell(state, stamModifier)) hasError = true;
-                }
-            }
-
-            if (patchSettings.MoveSpeed)
-            {
-                foreach (var speedModifier in speedSpells)
-                {
-                    if (!ModifySpell(state, speedModifier)) hasError = true;
-                }
-            }
-
-            return !hasError;
-        }
-
-        private static bool ModifySpell(IPatcherState<ISkyrimMod, ISkyrimModGetter> state, ActionSpeedX.FormKeys.SpellEffectModifier spellToModify)
-        {
-            if (!state.LinkCache.TryResolve<ISpellGetter>(spellToModify.formKey, out var spell))
-            {
-                Console.Out.WriteLine($"Could not resolve form key for: {spellToModify.editorId}");
-                return false;
-            }
-            var modifiedSpell = spell.DeepCopy();
-
-            var effect = modifiedSpell.Effects[spellToModify.effectSlot];
-            if (effect.Data == null)
-            {
-                Console.Out.WriteLine($"{spellToModify.editorId} has no effects.");
-                return false;
-            }
-            
-            effect.Data.Magnitude = spellToModify.magnitude;
-            state.PatchMod.Spells.Add(modifiedSpell);
-            return true;
-        }
-
     }
 }

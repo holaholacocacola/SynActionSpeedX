@@ -1,5 +1,3 @@
-// Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
-
 namespace ActionSpeedX
 {
     public class Settings 
