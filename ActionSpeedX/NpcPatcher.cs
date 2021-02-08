@@ -58,6 +58,14 @@ namespace ActionSpeedX
 
         public void PatchNpcs()
         {
+            /*
+             * 1. Loop over all npcs.
+             * 2. Verify it is not a ghost, an inherited template, and has a valid race
+             * 3. Check if it has a match with a race in races.json
+             * 4. Add perks based on settings.json
+             * 
+             */
+
             foreach (var npc in this.state.LoadOrder.PriorityOrder.WinningOverrides<INpcGetter>())
             {
                 if (npc.Configuration.TemplateFlags.HasFlag(NpcConfiguration.TemplateFlag.SpellList) || npc.EditorID == null) continue; // Perks are inherited from a template

@@ -36,7 +36,7 @@ namespace ActionSpeedX
         {
             
             /*
-             *  Load all settings files. See Readme for explanation of how they are consumed
+             *  Load all settings files. 
              */
             string[] requiredFiles = { state.ExtraSettingsDataPath + @"\armor_descriptions.json", 
                                        state.ExtraSettingsDataPath + @"\armor_materials.json",

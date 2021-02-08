@@ -58,13 +58,18 @@ namespace ActionSpeedX
                 {STAMINA, this.settings.StaminaRegen }
             };
 
-            this.materialRanks = loadMaterials();
-            this.armorDescriptions = loadDescriptions();
+            this.materialRanks = loadMaterialsFromDisk();
+            this.armorDescriptions = loadDescriptionsFromDisk();
         }
 
         public void PatchArmors()
         {
-           
+           /**
+            * 1. Loop over all armors.
+            * 2. For each armor, iterate over its keywords and match it to the tier rank in armor_rankings.json. Grab the HIGHEST tier.
+            * 3. Based on that tier + armor slot + armor type, assign it a keyword from the appropiate ASX_<armor> keyword from Light/HeavyArmorKeywordCollection
+            * 4. If description setting is turned on, update the item description.
+            */
             foreach (var armor in this.state.LoadOrder.PriorityOrder.WinningOverrides<IArmorGetter>())
             {
                 if (armor.EditorID == null || armor.Keywords == null || armor.BodyTemplate == null || armor.BodyTemplate.ArmorType == ArmorType.Clothing) continue;
@@ -183,7 +188,7 @@ namespace ActionSpeedX
         }
 
 
-        private Dictionary<string, int> loadMaterials()
+        private Dictionary<string, int> loadMaterialsFromDisk()
         {
             string file = Path.Combine(this.state.ExtraSettingsDataPath, MATERIALS_FILE); // already validated in callee
             var armorMaterials = JObject.Parse(File.ReadAllText(file));
@@ -195,7 +200,7 @@ namespace ActionSpeedX
             return materials;
         }
 
-        private JObject loadDescriptions()
+        private JObject loadDescriptionsFromDisk()
         {
             string file = Path.Combine(this.state.ExtraSettingsDataPath, DESCRIPTIONS_FILE); // already validated in callee
             return JObject.Parse(File.ReadAllText(file));
