@@ -1,0 +1,127 @@
+{
+  "Descriptions": {
+    "PowerAttacks": " +{% Power attack cost.",
+    "StaminaRegen": " -{% Stamina Regeneration.",
+    "MoveSpeed": " -{% Stride.",
+    "MagickaRegen": " -{% Magicka Regeneration.",
+    "AttackSpeed": " -{% Attack speed.",
+    "SpellCosts": " +{% Spell Costs.",
+    "RangedAttack": " +{% Reload speed."
+  },
+
+  "Magnitudes": {
+    "Gauntlets": {
+      "PowerAttacks": {
+        "Light": [ 4.0, 5.0, 6.0, 8.0 ],
+        "Medium": [ 6.0, 7.0, 9.0, 10.0 ],
+        "Heavy": [ 8.0, 9.0, 11.0, 13.0 ]
+      },
+      "MoveSpeed": {
+        "Light": [ 1.0, 1.5, 2.0, 2.5 ],
+        "Medium": [ 1.5, 2.0, 2.5, 3.0 ],
+        "Heavy": [ 2.0, 2.5, 3.0, 3.5 ]
+      },
+      "AttackSpeed": {
+        "Light": [ 1.0, 2.0, 2.0, 3.0 ],
+        "Medium": [ 2.0, 2.0, 3.0, 3.0 ],
+        "Heavy": [ 2.0, 3.0, 3.0, 4.0 ]
+      },
+      "RangedAttack": {
+        "Light": [ 3.0, 3.0, 4.0, 4.0 ],
+        "Medium": [ 4.0, 4.0, 5.0, 5.0 ],
+        "Heavy": [ 5.0, 5.0, 6.0, 6.0 ]
+      },
+      "SpellCosts": {
+        "Light": [ 3.0, 3.0, 4.0, 4.0 ],
+        "Medium": [ 4.0, 4.0, 5.0, 5.0 ],
+        "Heavy": [ 5.0, 5.0, 6.0, 6.0 ]
+      },
+      "StaminaRegen": {
+        "Light": [ 1.25, 1.88, 2.5, 3.13 ],
+        "Medium": [ 1.88, 2.5, 3.75, 4.75 ],
+        "Heavy": [ 2.5, 3.75, 4.75, 6.25 ]
+      },
+      "MagickaRegen": {
+        "Light": [ 1.25, 1.88, 2.5, 3.13 ],
+        "Medium": [ 1.88, 2.5, 3.75, 4.75 ],
+        "Heavy": [ 2.5, 3.75, 4.75, 6.25 ]
+      }
+    },
+    "Boots": {
+      "PowerAttacks": {
+        "Light": [ 8.0, 10.0, 13.0, 15.0 ],
+        "Medium": [ 12.0, 14.0, 18.0, 20.0 ],
+        "Heavy": [ 15.0, 19.0, 23.0, 25.0 ]
+      },
+      "MoveSpeed": {
+        "Light": [ 2.0, 3.0, 4.0, 5.0 ],
+        "Medium": [ 3.0, 4.0, 5.0, 6.0 ],
+        "Heavy": [ 4.0, 5.0, 6.0, 7.0 ]
+      },
+      "AttackSpeed": {
+        "Light": [ 2.0, 3.0, 4.0, 5.0 ],
+        "Medium": [ 3.0, 4.0, 5.0, 6.0 ],
+        "Heavy": [ 4.0, 5.0, 6.0, 7.0 ]
+      },
+      "RangedAttack": {
+        "Light": [ 5.0, 6.0, 7.0, 8.0 ],
+        "Medium": [ 7.0, 8.0, 9.0, 10.0 ],
+        "Heavy": [ 9.0, 10.0, 11.0, 12.0 ]
+      },
+      "SpellCosts": {
+        "Light": [ 5.0, 6.0, 7.0, 8.0 ],
+        "Medium": [ 7.0, 8.0, 9.0, 10.0 ],
+        "Heavy": [ 9.0, 10.0, 11.0, 12.0 ]
+      },
+      "StaminaRegen": {
+        "Light": [ 2.5, 3.75, 5.0, 6.25 ],
+        "Medium": [ 3.75, 5.87, 7.5, 9.37 ],
+        "Heavy": [ 5.0, 7.5, 10.0, 12.5 ]
+      },
+      "MagickaRegen": {
+        "Light": [ 2.5, 3.75, 5.0, 6.25 ],
+        "Medium": [ 3.75, 5.87, 7.5, 9.37 ],
+        "Heavy": [ 5.0, 7.5, 10.0, 12.5 ]
+      }
+    },
+    "Cuirass": {
+      "PowerAttacks": {
+        "Light": [ 15.0, 20.0, 25.0, 30.0 ],
+        "Medium": [ 23.0, 28.0, 35.0, 40.0 ],
+        "Heavy": [ 30.0, 38.0, 45.0, 50.0 ]
+      },
+      "MoveSpeed": {
+        "Light": [ 4.0, 6.0, 8.0, 10.0 ],
+        "Medium": [ 6.0, 8.0, 10.0, 12.0 ],
+        "Heavy": [ 8.0, 10.0, 12.0, 14.0 ]
+      },
+      "AttackSpeed": {
+        "Light": [ 4.0, 6.0, 8.0, 10.0 ],
+        "Medium": [ 6.0, 8.0, 10.0, 12.0 ],
+        "Heavy": [ 8.0, 10.0, 12.0, 14.0 ]
+      },
+      "RangedAttack": {
+        "Light": [ 10.0, 12.0, 14.0, 16.0 ],
+        "Medium": [ 14.0, 16.0, 18.0, 20.0 ],
+        "Heavy": [ 18.0, 20.0, 22.0, 24.0 ]
+      },
+      "SpellCosts": {
+        "Light": [ 10.0, 12.0, 14.0, 16.0 ],
+        "Medium": [ 14.0, 16.0, 18.0, 20.0 ],
+        "Heavy": [ 18.0, 20.0, 22.0, 24.0 ]
+      },
+      "StaminaRegen": {
+        "Light": [ 5.0, 7.5, 10.0, 12.5 ],
+        "Medium": [ 7.5, 11.25, 15.0, 18.75 ],
+        "Heavy": [ 10.0, 15.0, 20.0, 25.0 ]
+      },
+      "MagickaRegen": {
+        "Light": [ 5.0, 7.5, 10.0, 12.5 ],
+        "Medium": [ 7.5, 11.25, 15.0, 18.75 ],
+        "Heavy": [ 10.0, 15.0, 20.0, 25.0 ]
+      }
+    }
+
+  }
+}
+
