@@ -12,11 +12,9 @@ namespace ActionSpeedX
 {
     public class NpcPatcher
     {
-        const string RACES_FILE = "races.json";
-
         private IPatcherState<ISkyrimMod, ISkyrimModGetter> state;
         private ActionSpeedX.Settings settings; // in memory rep of settings.json
-        private HashSet<string> racesToPatch; // contains valid races to add perks too.
+        private HashSet<FormLink<IRaceGetter>> racesToPatch; // contains valid races to add perks too.
         private List<FormKey> perksToAdd; // Contains form ids of perks to add to every npc.
 
         public NpcPatcher(IPatcherState<ISkyrimMod, ISkyrimModGetter> state, ActionSpeedX.Settings settings)
@@ -41,18 +39,10 @@ namespace ActionSpeedX
             if (this.settings.SpellCosts) perksToAdd.AddRange(ActionSpeedX.FormKeys.Perks.SpellCosts);
         }
 
-        private HashSet<string> loadRaces()
+        private HashSet<FormLink<IRaceGetter>> loadRaces()
         {
-            string file = Path.Combine(this.state.ExtraSettingsDataPath, RACES_FILE); // already validated in callee
-            var races = JObject.Parse(File.ReadAllText(file));
-            
-            Dictionary<string, List<string>>? availableRaces = races.ToObject<Dictionary<string, List<string>>>();
-            if (availableRaces == null)
-            {
-                throw new Exception("Could not parse armor materials file");
-            }
-            HashSet<string> parsed = new HashSet<string>(availableRaces["default"]); // this could throw
-            if (this.settings.Creatures) parsed.UnionWith(availableRaces["creatures"]); // this could throw too.
+            var parsed = new HashSet<FormLink<IRaceGetter>>(settings.DefaultRaces);
+            if (this.settings.Creatures) parsed.UnionWith(settings.CreatureRaces);
             return parsed;
         }
 
@@ -61,7 +51,7 @@ namespace ActionSpeedX
             /*
              * 1. Loop over all npcs.
              * 2. Verify it is not a ghost, an inherited template, and has a valid race
-             * 3. Check if it has a match with a race in races.json
+             * 3. Check if it has a match with a races
              * 4. Add perks based on settings.json
              * 
              */
@@ -70,7 +60,7 @@ namespace ActionSpeedX
             {
                 if (npc.Configuration.TemplateFlags.HasFlag(NpcConfiguration.TemplateFlag.SpellList) || npc.EditorID == null) continue; // Perks are inherited from a template
                 if (npc.Keywords != null && npc.Keywords.Contains(Skyrim.Keyword.ActorTypeGhost)) continue; // Ghost shouldnt be affected by armor
-                if (!npc.Race.TryResolve(state.LinkCache, out var race) || race.EditorID == null || !this.racesToPatch.Contains(race.EditorID)) continue;
+                if (!this.racesToPatch.Contains(npc.Race)) continue;
 
                 var npcCopy = this.state.PatchMod.Npcs.GetOrAddAsOverride(npc);
                 if (npcCopy.Perks == null) npcCopy.Perks = new ExtendedList<PerkPlacement>();
@@ -88,9 +78,9 @@ namespace ActionSpeedX
                     continue;
                 }
 
-                if (this.settings.Racials && ActionSpeedX.FormKeys.Perks.RacialPerks.ContainsKey(race.EditorID))
+                if (this.settings.Racials && ActionSpeedX.FormKeys.Perks.RacialPerks.ContainsKey(npc.Race.FormKey))
                 {
-                    PerkPlacement p = new PerkPlacement { Rank = 1, Perk = ActionSpeedX.FormKeys.Perks.RacialPerks[race.EditorID] };
+                    PerkPlacement p = new PerkPlacement { Rank = 1, Perk = ActionSpeedX.FormKeys.Perks.RacialPerks[npc.Race.FormKey] };
                     npcCopy.Perks.Add(p);   
                 }
 
@@ -98,9 +88,9 @@ namespace ActionSpeedX
                 {
                     foreach (var faction in npc.Factions)
                     {
-                        if (faction.Faction.TryResolve(this.state.LinkCache, out var wtf) && wtf.EditorID != null && ActionSpeedX.FormKeys.Perks.FactionPerks.ContainsKey(wtf.EditorID))
+                        if (ActionSpeedX.FormKeys.Perks.FactionPerks.ContainsKey(faction.Faction.FormKey))
                         {
-                            PerkPlacement p = new PerkPlacement { Rank = 1, Perk = ActionSpeedX.FormKeys.Perks.FactionPerks[wtf.EditorID] };
+                            PerkPlacement p = new PerkPlacement { Rank = 1, Perk = ActionSpeedX.FormKeys.Perks.FactionPerks[faction.Faction.FormKey] };
                             npcCopy.Perks.Add(p);
                         }
                     }   

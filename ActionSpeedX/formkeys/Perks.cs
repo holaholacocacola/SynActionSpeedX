@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Mutagen.Bethesda;
+using Mutagen.Bethesda.FormKeys.SkyrimSE;
 
 namespace ActionSpeedX
 {
@@ -171,35 +172,35 @@ namespace ActionSpeedX
             };
 
             // distribute by matching against RACE editor id. This is what needs to be updated for custom race proficiency perk support
-            public static readonly Dictionary<string, FormKey> RacialPerks = new Dictionary<string, FormKey>{
-                { "ArgonianRace", ASX_ArgonianRacialProficiencyPerk },
-                { "ArgonianRaceVampire", ASX_ArgonianRacialProficiencyPerk },
-                { "DarkElfRace", ASX_DunmerRacialProficiencyPerk },
-                { "DarkElfgRaceVampire", ASX_DunmerRacialProficiencyPerk },
-                { "ImperialRace", ASX_ImperialRacialProficiencyPerk },
-                { "ImperialRaceVampire", ASX_ImperialRacialProficiencyPerk },
-                { "NordRace", ASX_NordRacialProficiencyPerk },
-                { "NordRaceVampire", ASX_NordRacialProficiencyPerk },
-                { "OrcRace", ASX_OrcRacialProficiencyPerk },
-                { "OrcRaceVampire", ASX_OrcRacialProficiencyPerk },
-                { "RedguardRace", ASX_RedguardRacialProficiencyPerk },
-                { "RedguardRaceVampire", ASX_RedguardRacialProficiencyPerk },
-                { "WoodElfRace", ASX_BosmerRacialProficiencyPerk },
-                { "WoodElfRaceVampire", ASX_BosmerRacialProficiencyPerk },
+            public static readonly Dictionary<FormKey, FormKey> RacialPerks = new Dictionary<FormKey, FormKey>{
+                { Skyrim.Race.ArgonianRace, ASX_ArgonianRacialProficiencyPerk },
+                { Skyrim.Race.ArgonianRaceVampire, ASX_ArgonianRacialProficiencyPerk },
+                { Skyrim.Race.DarkElfRace, ASX_DunmerRacialProficiencyPerk },
+                { Skyrim.Race.DarkElfRaceVampire, ASX_DunmerRacialProficiencyPerk },
+                { Skyrim.Race.ImperialRace, ASX_ImperialRacialProficiencyPerk },
+                { Skyrim.Race.ImperialRaceVampire, ASX_ImperialRacialProficiencyPerk },
+                { Skyrim.Race.NordRace, ASX_NordRacialProficiencyPerk },
+                { Skyrim.Race.NordRaceVampire, ASX_NordRacialProficiencyPerk },
+                { Skyrim.Race.OrcRace, ASX_OrcRacialProficiencyPerk },
+                { Skyrim.Race.OrcRaceVampire, ASX_OrcRacialProficiencyPerk },
+                { Skyrim.Race.RedguardRace, ASX_RedguardRacialProficiencyPerk },
+                { Skyrim.Race.RedguardRaceVampire, ASX_RedguardRacialProficiencyPerk },
+                { Skyrim.Race.WoodElfRace, ASX_BosmerRacialProficiencyPerk },
+                { Skyrim.Race.WoodElfRaceVampire, ASX_BosmerRacialProficiencyPerk },
             };
 
             // These are distributed by looping through npc factions and matching against editorId.
-            public static readonly Dictionary<string, FormKey> FactionPerks = new Dictionary<string, FormKey>
+            public static readonly Dictionary<FormKey, FormKey> FactionPerks = new Dictionary<FormKey, FormKey>
             {
-                {"CWImperialFaction", ASX_ImperialSoldierFactionProficiencyPerk },
-                {"CWSonsFaction", ASX_StormcloakFactionProficiencyPerk },
-                {"DraugrFaction", ASX_DraugrFactionProficiencyPerk },
-                {"DremoraFaction", ASX_DremoraFactionProficiencyPerk },
-                {"FalmerFaction", ASX_FalmerFactionProficiencyPerk },
-                {"ForswornFaction", ASX_ForswornFactionProficiencyPerk },
-                {"IsGuardFaction", ASX_GuardsFactionProficiencyPerk },
-                {"DLC1HunterFaction", ASX_DawnguardFactionProficiencyPerk },
-                {"ThalmorFaction", ASX_ThalmorFactionProficiencyPerk },
+                { Skyrim.Faction.CWImperialFaction, ASX_ImperialSoldierFactionProficiencyPerk },
+                { Skyrim.Faction.CWSonsFaction, ASX_StormcloakFactionProficiencyPerk },
+                { Skyrim.Faction.DraugrFaction, ASX_DraugrFactionProficiencyPerk },
+                { Skyrim.Faction.DremoraFaction, ASX_DremoraFactionProficiencyPerk },
+                { Skyrim.Faction.FalmerFaction, ASX_FalmerFactionProficiencyPerk },
+                { Skyrim.Faction.ForswornFaction, ASX_ForswornFactionProficiencyPerk },
+                { Skyrim.Faction.IsGuardFaction, ASX_GuardsFactionProficiencyPerk },
+                { Dawnguard.Faction.DLC1HunterFaction, ASX_DawnguardFactionProficiencyPerk },
+                { Skyrim.Faction.ThalmorFaction, ASX_ThalmorFactionProficiencyPerk },
             };
 
             /* Will add once medium armor patcher is done
