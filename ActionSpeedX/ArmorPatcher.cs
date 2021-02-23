@@ -97,10 +97,12 @@ namespace ActionSpeedX
                 {
                     if (keyword.TryResolve(state.LinkCache, out var kw))
                     {
-                        if (kw.EditorID!= null && this.materialRanks.ContainsKey(kw.EditorID))
+                        if (kw.EditorID!= null && this.materialRanks.TryGetValue(kw.EditorID, out var rank))
                         {
-                            int rank = this.materialRanks[kw.EditorID];
-                            if (rank > tier) tier = rank;
+                            if (rank > tier)
+                            {
+                                tier = rank;
+                            }
                         }
                     }
                 }

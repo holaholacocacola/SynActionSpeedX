@@ -78,9 +78,9 @@ namespace ActionSpeedX
                     continue;
                 }
 
-                if (this.settings.Racials && ActionSpeedX.FormKeys.Perks.RacialPerks.ContainsKey(npc.Race.FormKey))
+                if (this.settings.Racials && ActionSpeedX.FormKeys.Perks.RacialPerks.TryGetValue(npc.Race.FormKey, out var racialPerk))
                 {
-                    PerkPlacement p = new PerkPlacement { Rank = 1, Perk = ActionSpeedX.FormKeys.Perks.RacialPerks[npc.Race.FormKey] };
+                    PerkPlacement p = new PerkPlacement { Rank = 1, Perk = racialPerk };
                     npcCopy.Perks.Add(p);   
                 }
 
@@ -88,9 +88,9 @@ namespace ActionSpeedX
                 {
                     foreach (var faction in npc.Factions)
                     {
-                        if (ActionSpeedX.FormKeys.Perks.FactionPerks.ContainsKey(faction.Faction.FormKey))
+                        if (ActionSpeedX.FormKeys.Perks.FactionPerks.TryGetValue(faction.Faction.FormKey, out var factionPerk))
                         {
-                            PerkPlacement p = new PerkPlacement { Rank = 1, Perk = ActionSpeedX.FormKeys.Perks.FactionPerks[faction.Faction.FormKey] };
+                            PerkPlacement p = new PerkPlacement { Rank = 1, Perk = factionPerk };
                             npcCopy.Perks.Add(p);
                         }
                     }   
