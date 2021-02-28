@@ -6,7 +6,7 @@
 Requirements:
 ------------
 [Synthesis Patch Framework](https://github.com/Mutagen-Modding/Synthesis/wiki/Installation).
-[Action Speed: X](https://google.com)  substitute link when released. Just the esp.
+[Action Speed: X](https://www.nexusmods.com/skyrimspecialedition/mods/46297)  
 
 ### Settings
 ##### Settings can be configured by modifying the settings.json under  <Synthesis/Data/ActionSpeedX/settings.json>
