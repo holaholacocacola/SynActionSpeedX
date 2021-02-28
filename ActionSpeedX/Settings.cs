@@ -2,17 +2,17 @@ namespace ActionSpeedX
 {
     public class Settings 
     {
-        public bool Descriptions { get; set; }
-        public bool AttackSpeed { get; set; }
-        public bool MagickaRegen { get; set; }
-        public bool MoveSpeed { get; set; }
-        public bool PowerAttacks { get; set; }
-        public bool RangedAttack { get; set; }
-        public bool SpellCosts { get; set; }
-        public bool StaminaRegen { get; set; }
-        public bool Creatures { get; set; }
-        public bool Racials { get; set; }
-        public bool Factions { get; set; }
-        public bool BalancePerkMods { get; set; }
+        public bool Descriptions { get; set; } = false;
+        public bool AttackSpeed { get; set; } = true;
+        public bool MagickaRegen { get; set; } = true;
+        public bool MoveSpeed { get; set; } = true;
+        public bool PowerAttacks { get; set; } = true;
+        public bool RangedAttack { get; set; } = true;
+        public bool SpellCosts { get; set; } = true;
+        public bool StaminaRegen { get; set; } = true;
+        public bool Creatures { get; set; } = true;
+        public bool Racials { get; set; } = true;
+        public bool Factions { get; set; } = true;
+        public bool BalancePerkMods { get; set; } = true;
     }
 }

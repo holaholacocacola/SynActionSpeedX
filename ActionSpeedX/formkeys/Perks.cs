@@ -175,7 +175,7 @@ namespace ActionSpeedX
                 { "ArgonianRace", ASX_ArgonianRacialProficiencyPerk },
                 { "ArgonianRaceVampire", ASX_ArgonianRacialProficiencyPerk },
                 { "DarkElfRace", ASX_DunmerRacialProficiencyPerk },
-                { "DarkElfgRaceVampire", ASX_DunmerRacialProficiencyPerk },
+                { "DarkElfRaceVampire", ASX_DunmerRacialProficiencyPerk },
                 { "ImperialRace", ASX_ImperialRacialProficiencyPerk },
                 { "ImperialRaceVampire", ASX_ImperialRacialProficiencyPerk },
                 { "NordRace", ASX_NordRacialProficiencyPerk },
