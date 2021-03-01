@@ -52,7 +52,7 @@ namespace ActionSpeedX
                 throw new Exception("Could not parse armor materials file");
             }
             HashSet<string> parsed = new HashSet<string>(availableRaces["default"]); // this could throw
-            if (this.settings.Creatures) parsed.UnionWith(availableRaces["creatures"]); // this could throw too.
+            //if (this.settings.Creatures) parsed.UnionWith(availableRaces["creatures"]); // disable creatures for now
             return parsed;
         }
 
