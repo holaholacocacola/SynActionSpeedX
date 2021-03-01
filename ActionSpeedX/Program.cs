@@ -49,10 +49,13 @@ namespace ActionSpeedX
                                        state.ExtraSettingsDataPath + @"\races.json"};
 
             string[] foundFiles = Directory.GetFiles(state.ExtraSettingsDataPath);
-            if (!requiredFiles.SequenceEqual(foundFiles))
-                throw new Exception("Missing one of the following json files in the Data folder: armor_descriptions, armor_materials, races");
+           
 
+            Console.WriteLine("[{0}]", string.Join(", ", requiredFiles));
+            Console.WriteLine("[{0}]", string.Join(", ", foundFiles));
             
+            if (! requiredFiles.All(value => foundFiles.Contains(value)))
+                throw new Exception("Missing one of the following json files in the Data folder: armor_descriptions, armor_materials, races"); 
 
             // PerkMod Patcher. Modifies magnitudes.
             if (Settings.BalancePerkMods)
