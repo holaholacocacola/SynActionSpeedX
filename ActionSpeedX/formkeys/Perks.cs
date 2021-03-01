@@ -193,9 +193,9 @@ namespace ActionSpeedX
             {
                 {"CWImperialFaction", ASX_ImperialSoldierFactionProficiencyPerk },
                 {"CWSonsFaction", ASX_StormcloakFactionProficiencyPerk },
-                {"DraugrFaction", ASX_DraugrFactionProficiencyPerk },
-                {"DremoraFaction", ASX_DremoraFactionProficiencyPerk },
-                {"FalmerFaction", ASX_FalmerFactionProficiencyPerk },
+                //{"DraugrFaction", ASX_DraugrFactionProficiencyPerk },
+              //  {"DremoraFaction", ASX_DremoraFactionProficiencyPerk },
+             //   {"FalmerFaction", ASX_FalmerFactionProficiencyPerk },
                 {"ForswornFaction", ASX_ForswornFactionProficiencyPerk },
                 {"IsGuardFaction", ASX_GuardsFactionProficiencyPerk },
                 {"DLC1HunterFaction", ASX_DawnguardFactionProficiencyPerk },

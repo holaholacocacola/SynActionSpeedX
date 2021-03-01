@@ -107,8 +107,9 @@ namespace ActionSpeedX
                
                 if (tier < 0)
                 {
-                    Console.WriteLine($"No recognized material type for {armor.EditorID}. Defaulting to tier 2 ");
-                    tier = 1;
+                    Console.WriteLine($"No recognized material type for {armor.EditorID}. Skipping. ");
+                    // tier = 1;
+                    continue;
                 }
                 else
                 {
