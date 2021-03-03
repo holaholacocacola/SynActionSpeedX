@@ -1,6 +1,6 @@
 {
   "Nickname": "ActionSpeedX",
-  "Visibility": "Exclude",
+  "Visibility": "Visible",
   "OneLineDescription": "Action Speed X patcher",
   "LongDescription": "",
   "PreferredAutoVersioning": "Default",
