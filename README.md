@@ -19,7 +19,6 @@ Requirements:
 -  RangedAttack - `bool`: Enables attack speed penalties for ranged weapons
 -  SpellCosts   - `bool`: Enables spell cost penalties
 -  StaminaRegen - `bool`: Enables stamina regen penalties
--  Creatures    - `bool`: Enables armor wearing creatures to be affected
 -  Racials      - `bool`: Distrubute racial perks that offset certain penalties based on lore
 -  Factions     - `bool`: Distribute faction perks that offset certain penalties based on lore
 -  BalancePerkMods - `bool`:  Rebalances some effects from Ordinator|Adamant|Vokrii to keep in line with this mods vision
