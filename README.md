@@ -9,8 +9,7 @@ Requirements:
 [Action Speed: X](https://www.nexusmods.com/skyrimspecialedition/mods/46297)  
 
 ### Settings
-##### Settings can be configured by modifying the settings.json under  <Synthesis/Data/ActionSpeedX/settings.json>
-
+##### Settings can be configured by in the settings tab in the synthesis gui
 -  Descriptions - `bool`: Enables effect descriptions + debuff %s to be displayed on armors
 -  AttackSpeed  - `bool` : Enables attack speed penalties
 -  MagickaRegen - `bool`: Enables magicka regeneration penalties
