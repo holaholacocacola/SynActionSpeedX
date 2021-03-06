@@ -109,7 +109,7 @@ namespace ActionSpeedX
                     }
                 } catch (Exception e) 
                 {
-                    Console.WriteLine($"Error processing npc record {npc.EditorID} from {npc.FormKey.ModKey.FileName}  : {e.Message}. Skipping");
+                    throw RecordException.Factory("Error processing npc record", npc, e);
                 }
             }
         }

@@ -137,7 +137,7 @@ namespace ActionSpeedX
                 } catch (Exception e)
                 
                 {
-                    Console.WriteLine($"Error processing armor record {armor.EditorID}  from {armor.FormKey.ModKey.FileName} : {e.Message}. Skipping");
+                    throw RecordException.Factory("Error processing armor record", armor, e);
                 }
             }
         }
