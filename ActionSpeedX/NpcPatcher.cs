@@ -68,42 +68,48 @@ namespace ActionSpeedX
 
             foreach (var npc in this.state.LoadOrder.PriorityOrder.WinningOverrides<INpcGetter>())
             {
-                if (npc.Configuration.TemplateFlags.HasFlag(NpcConfiguration.TemplateFlag.SpellList) || npc.EditorID == null) continue; // Perks are inherited from a template
-                if (npc.Keywords != null && npc.Keywords.Contains(Skyrim.Keyword.ActorTypeGhost)) continue; // Ghost shouldnt be affected by armor
-                if (!npc.Race.TryResolve(state.LinkCache, out var race) || race.EditorID == null || !this.racesToPatch.Contains(race.EditorID)) continue;
+                try 
+                { 
+                    if (npc.Configuration.TemplateFlags.HasFlag(NpcConfiguration.TemplateFlag.SpellList) || npc.EditorID == null) continue; // Perks are inherited from a template
+                    if (npc.Keywords != null && npc.Keywords.Contains(Skyrim.Keyword.ActorTypeGhost)) continue; // Ghost shouldnt be affected by armor
+                    if (!npc.Race.TryResolve(state.LinkCache, out var race) || race.EditorID == null || !this.racesToPatch.Contains(race.EditorID)) continue;
 
-                var npcCopy = this.state.PatchMod.Npcs.GetOrAddAsOverride(npc);
-                if (npcCopy.Perks == null) npcCopy.Perks = new ExtendedList<PerkPlacement>();
-                foreach (var perk in this.perksToAdd)
-                {
-                    PerkPlacement p = new PerkPlacement { Rank = 1, Perk = perk };
-                    npcCopy.Perks.Add(p);
-                }
-
-                if (npc.EditorID == "Player" && this.settings.Racials) 
-                {
-                    // a quest runs after racemenu that will sift and apply the correct racial perk. This perk is removed after.
-                    PerkPlacement p = new PerkPlacement { Rank = 1, Perk = ActionSpeedX.FormKeys.Perks.ASX_DummyPerk };
-                    npcCopy.Perks.Add(p);                  
-                    continue;
-                }
-
-                if (this.settings.Racials && ActionSpeedX.FormKeys.Perks.RacialPerks.ContainsKey(race.EditorID))
-                {
-                    PerkPlacement p = new PerkPlacement { Rank = 1, Perk = ActionSpeedX.FormKeys.Perks.RacialPerks[race.EditorID] };
-                    npcCopy.Perks.Add(p);   
-                }
-
-                if (this.settings.Factions && npc.Factions != null)
-                {
-                    foreach (var faction in npc.Factions)
+                    var npcCopy = this.state.PatchMod.Npcs.GetOrAddAsOverride(npc);
+                    if (npcCopy.Perks == null) npcCopy.Perks = new ExtendedList<PerkPlacement>();
+                    foreach (var perk in this.perksToAdd)
                     {
-                        if (faction.Faction.TryResolve(this.state.LinkCache, out var wtf) && wtf.EditorID != null && ActionSpeedX.FormKeys.Perks.FactionPerks.ContainsKey(wtf.EditorID))
+                        PerkPlacement p = new PerkPlacement { Rank = 1, Perk = perk };
+                        npcCopy.Perks.Add(p);
+                    }
+
+                    if (npc.EditorID == "Player" && this.settings.Racials)
+                    {
+                        // a quest runs after racemenu that will sift and apply the correct racial perk. This perk is removed after.
+                        PerkPlacement p = new PerkPlacement { Rank = 1, Perk = ActionSpeedX.FormKeys.Perks.ASX_DummyPerk };
+                        npcCopy.Perks.Add(p);
+                        continue;
+                    }
+
+                    if (this.settings.Racials && ActionSpeedX.FormKeys.Perks.RacialPerks.ContainsKey(race.EditorID))
+                    {
+                        PerkPlacement p = new PerkPlacement { Rank = 1, Perk = ActionSpeedX.FormKeys.Perks.RacialPerks[race.EditorID] };
+                        npcCopy.Perks.Add(p);
+                    }
+
+                    if (this.settings.Factions && npc.Factions != null)
+                    {
+                        foreach (var faction in npc.Factions)
                         {
-                            PerkPlacement p = new PerkPlacement { Rank = 1, Perk = ActionSpeedX.FormKeys.Perks.FactionPerks[wtf.EditorID] };
-                            npcCopy.Perks.Add(p);
+                            if (faction.Faction.TryResolve(this.state.LinkCache, out var wtf) && wtf.EditorID != null && ActionSpeedX.FormKeys.Perks.FactionPerks.ContainsKey(wtf.EditorID))
+                            {
+                                PerkPlacement p = new PerkPlacement { Rank = 1, Perk = ActionSpeedX.FormKeys.Perks.FactionPerks[wtf.EditorID] };
+                                npcCopy.Perks.Add(p);
+                            }
                         }
-                    }   
+                    }
+                } catch (Exception e) 
+                {
+                    throw RecordException.Factory("Error processing npc record", npc, e);
                 }
             }
         }

@@ -64,72 +64,81 @@ namespace ActionSpeedX
 
         public void PatchArmors()
         {
-           /**
-            * 1. Loop over all armors.
-            * 2. For each armor, iterate over its keywords and match it to the tier rank in armor_rankings.json. Grab the HIGHEST tier.
-            * 3. Based on that tier + armor slot + armor type, assign it a keyword from the appropiate ASX_<armor> keyword from Light/HeavyArmorKeywordCollection
-            * 4. If description setting is turned on, update the item description.
-            */
+            /**
+             * 1. Loop over all armors.
+             * 2. For each armor, iterate over its keywords and match it to the tier rank in armor_rankings.json. Grab the HIGHEST tier.
+             * 3. Based on that tier + armor slot + armor type, assign it a keyword from the appropiate ASX_<armor> keyword from Light/HeavyArmorKeywordCollection
+             * 4. If description setting is turned on, update the item description.
+             */
             foreach (var armor in this.state.LoadOrder.PriorityOrder.WinningOverrides<IArmorGetter>())
             {
-                if (armor.EditorID == null || armor.Keywords == null || armor.BodyTemplate == null || armor.BodyTemplate.ArmorType == ArmorType.Clothing) continue;
-
-                string armorType;
-                Dictionary<string, List<FormKey>> armorKeysMap;
-                if (armor.BodyTemplate.ArmorType == ArmorType.LightArmor)
+                try
                 {
-                    armorKeysMap = ActionSpeedX.FormKeys.Keywords.LightArmorKeywordCollection;
-                    armorType = LIGHT;
-                }
-                else
-                {
-                    armorKeysMap = ActionSpeedX.FormKeys.Keywords.HeavyArmorKeywordCollection;
-                    armorType = HEAVY;
-                }
 
-                int tier = -1;
-                /* We want to grab the highest material tier as some items can have multiple material keywrods
-                   Loop over the armorRankings(see armor_materials.json) and check the current armors keywords for a match.
-                   Item.key = int/str, item.val=List(armor material strings)
-                */
 
-                foreach(var keyword in armor.Keywords)
-                {
-                    if (keyword.TryResolve(state.LinkCache, out var kw))
+                    if (armor.EditorID == null || armor.Keywords == null || armor.BodyTemplate == null || armor.BodyTemplate.ArmorType == ArmorType.Clothing) continue;
+
+                    string armorType;
+                    Dictionary<string, List<FormKey>> armorKeysMap;
+                    if (armor.BodyTemplate.ArmorType == ArmorType.LightArmor)
                     {
-                        if (kw.EditorID!= null && this.materialRanks.ContainsKey(kw.EditorID))
+                        armorKeysMap = ActionSpeedX.FormKeys.Keywords.LightArmorKeywordCollection;
+                        armorType = LIGHT;
+                    }
+                    else
+                    {
+                        armorKeysMap = ActionSpeedX.FormKeys.Keywords.HeavyArmorKeywordCollection;
+                        armorType = HEAVY;
+                    }
+
+                    int tier = -1;
+                    /* We want to grab the highest material tier as some items can have multiple material keywrods
+                       Loop over the armorRankings(see armor_materials.json) and check the current armors keywords for a match.
+                       Item.key = int/str, item.val=List(armor material strings)
+                    */
+
+                    foreach (var keyword in armor.Keywords)
+                    {
+                        if (keyword.TryResolve(state.LinkCache, out var kw))
                         {
-                            int rank = this.materialRanks[kw.EditorID];
-                            if (rank > tier) tier = rank;
+                            if (kw.EditorID != null && this.materialRanks.ContainsKey(kw.EditorID))
+                            {
+                                int rank = this.materialRanks[kw.EditorID];
+                                if (rank > tier) tier = rank;
+                            }
                         }
                     }
-                }
-               
-                if (tier < 0)
-                {
-                    Console.WriteLine($"No recognized material type for {armor.EditorID}. Skipping. ");
-                    // tier = 1;
-                    continue;
-                }
-                else
-                {
-                    tier--; //correct array access
-                }
-                string slot;
 
-                if (armor.Keywords.Contains(Skyrim.Keyword.ArmorBoots)) slot = BOOTS;
-                else if (armor.Keywords.Contains(Skyrim.Keyword.ArmorCuirass)) slot = CUIRASS;
-                else if (armor.Keywords.Contains(Skyrim.Keyword.ArmorGauntlets)) slot = GAUNTLETS;
-                else if (armor.Keywords.Contains(Skyrim.Keyword.ArmorHelmet)) slot = HELMET;
-                else if (armor.Keywords.Contains(Skyrim.Keyword.ArmorShield)) slot = SHIELD;
-                else
+                    if (tier < 0)
+                    {
+                        Console.WriteLine($"No recognized material type for {armor.EditorID}. Skipping. ");
+                        // tier = 1;
+                        continue;
+                    }
+                    else
+                    {
+                        tier--; //correct array access
+                    }
+                    string slot;
+
+                    if (armor.Keywords.Contains(Skyrim.Keyword.ArmorBoots)) slot = BOOTS;
+                    else if (armor.Keywords.Contains(Skyrim.Keyword.ArmorCuirass)) slot = CUIRASS;
+                    else if (armor.Keywords.Contains(Skyrim.Keyword.ArmorGauntlets)) slot = GAUNTLETS;
+                    else if (armor.Keywords.Contains(Skyrim.Keyword.ArmorHelmet)) slot = HELMET;
+                    else if (armor.Keywords.Contains(Skyrim.Keyword.ArmorShield)) slot = SHIELD;
+                    else
+                    {
+                        Console.WriteLine("No matching equip slot for " + armor.EditorID);
+                        continue;
+                    }
+                    var nw = state.PatchMod.Armors.GetOrAddAsOverride(armor);
+                    nw.Keywords?.Add(armorKeysMap[slot][tier]);
+                    if (this.settings.Descriptions) PatchArmorDescription(nw, armorType, slot, tier);
+                } catch (Exception e)
+                
                 {
-                    Console.WriteLine("No matching equip slot for " + armor.EditorID);
-                    continue;
+                    throw RecordException.Factory("Error processing armor record", armor, e);
                 }
-                var nw = state.PatchMod.Armors.GetOrAddAsOverride(armor);
-                nw.Keywords?.Add(armorKeysMap[slot][tier]);
-                if (this.settings.Descriptions) PatchArmorDescription(nw, armorType, slot, tier);
             }
         }
         
