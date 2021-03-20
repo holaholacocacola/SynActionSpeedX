@@ -23,14 +23,8 @@ namespace ActionSpeedX
                     out LazySettings)
                 .AddPatch<ISkyrimMod, ISkyrimModGetter>(RunPatch)
                 .AddRunnabilityCheck(RunnabilityCheck)
-                .Run(args, new RunPreferences()
-                {
-                    ActionsForEmptyArgs = new RunDefaultPatcher()
-                    {
-                        IdentifyingModKey = "action_speed_x_patch.esp",
-                        TargetRelease = GameRelease.SkyrimSE,
-                    }
-                });
+                .SetTypicalOpen(GameRelease.SkyrimSE, "action_speed_x_patch.esp")
+                .Run(args);
         }
 
         public static async Task RunnabilityCheck(IRunnabilityState state)

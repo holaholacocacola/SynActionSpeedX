@@ -7,6 +7,7 @@ using Noggog;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace ActionSpeedX
 {
@@ -78,21 +79,21 @@ namespace ActionSpeedX
                     if (npcCopy.Perks == null) npcCopy.Perks = new ExtendedList<PerkPlacement>();
                     foreach (var perk in this.perksToAdd)
                     {
-                        PerkPlacement p = new PerkPlacement { Rank = 1, Perk = perk };
+                        PerkPlacement p = new PerkPlacement { Rank = 1, Perk = perk.AsLink<IPerkGetter>() };
                         npcCopy.Perks.Add(p);
                     }
 
                     if (npc.EditorID == "Player" && this.settings.Racials)
                     {
                         // a quest runs after racemenu that will sift and apply the correct racial perk. This perk is removed after.
-                        PerkPlacement p = new PerkPlacement { Rank = 1, Perk = ActionSpeedX.FormKeys.Perks.ASX_DummyPerk };
+                        PerkPlacement p = new PerkPlacement { Rank = 1, Perk = FormKeys.Perks.ASX_DummyPerk.AsLink<IPerkGetter>() };
                         npcCopy.Perks.Add(p);
                         continue;
                     }
 
                     if (this.settings.Racials && ActionSpeedX.FormKeys.Perks.RacialPerks.ContainsKey(race.EditorID))
                     {
-                        PerkPlacement p = new PerkPlacement { Rank = 1, Perk = ActionSpeedX.FormKeys.Perks.RacialPerks[race.EditorID] };
+                        PerkPlacement p = new PerkPlacement { Rank = 1, Perk = FormKeys.Perks.RacialPerks[race.EditorID].AsLink<IPerkGetter>() };
                         npcCopy.Perks.Add(p);
                     }
 
@@ -102,7 +103,7 @@ namespace ActionSpeedX
                         {
                             if (faction.Faction.TryResolve(this.state.LinkCache, out var wtf) && wtf.EditorID != null && ActionSpeedX.FormKeys.Perks.FactionPerks.ContainsKey(wtf.EditorID))
                             {
-                                PerkPlacement p = new PerkPlacement { Rank = 1, Perk = ActionSpeedX.FormKeys.Perks.FactionPerks[wtf.EditorID] };
+                                PerkPlacement p = new PerkPlacement { Rank = 1, Perk = FormKeys.Perks.FactionPerks[wtf.EditorID].AsLink<IPerkGetter>() };
                                 npcCopy.Perks.Add(p);
                             }
                         }
