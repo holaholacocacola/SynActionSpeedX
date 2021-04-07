@@ -5,6 +5,7 @@ using Mutagen.Bethesda.Synthesis;
 using Newtonsoft.Json.Linq;
 using Noggog;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 

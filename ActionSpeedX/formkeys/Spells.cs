@@ -19,7 +19,7 @@ namespace ActionSpeedX
             */
 
             private static ModKey ModKey                = ModKey.FromNameAndExtension("Adamant.esp");         
-            private static FormKey MAG_PerkAgility30    => Skyrim.ASpell.PerkWindWalkerStamina; // This will be reduced from 50% -> 5%. Affects stamina regeneration. Why magus why...
+            private static FormKey MAG_PerkAgility30    => Skyrim.Spell.PerkWindWalkerStamina.FormKey; // This will be reduced from 50% -> 5%. Affects stamina regeneration. Why magus why...
             private static FormKey MAG_PerkAgility60    => ModKey.MakeFormKey(0x0F38DA); // This will be reduced from 100% -> 5%. Affects stamina regeneration
             private static FormKey MAG_abAthletics40    => ModKey.MakeFormKey(0x0F38D7); // This will be reduced from 10 -> 1%. Affects movement speed
             private static FormKey MAG_abAthletics60    => ModKey.MakeFormKey(0x153BF7); // This will be reduced from 10-> 2%. Affects movement speed.
