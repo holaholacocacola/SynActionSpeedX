@@ -1,4 +1,5 @@
 using Mutagen.Bethesda;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Synthesis;
 using Noggog;
@@ -74,7 +75,7 @@ namespace ActionSpeedX
 
         private bool AdjustEffect(ActionSpeedX.FormKeys.SpellEffectModifier spellToModify)
         {
-            if (!this.state.LinkCache.TryResolve<ISpellGetter>(spellToModify.formKey, out var spell))
+            if (!this.state.LinkCache.TryResolve<ISpellGetter>(spellToModify.formLink.FormKey, out var spell))
             {
                 Console.Out.WriteLine($"Could not resolve form key for: {spellToModify.editorId}");
                 return false;

@@ -1,4 +1,6 @@
 using Mutagen.Bethesda;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Skyrim;
 using System.Collections.Generic;
 using Mutagen.Bethesda.FormKeys.SkyrimSE;
 
@@ -18,12 +20,12 @@ namespace ActionSpeedX
             Akatash: Akatosh gices a 10% speed boost. This is reduced to 3% (Enough to offset boots)
             */
 
-            private static ModKey ModKey                = ModKey.FromNameAndExtension("Adamant.esp");         
-            private static FormKey MAG_PerkAgility30    => Skyrim.Spell.PerkWindWalkerStamina.FormKey; // This will be reduced from 50% -> 5%. Affects stamina regeneration. Why magus why...
-            private static FormKey MAG_PerkAgility60    => ModKey.MakeFormKey(0x0F38DA); // This will be reduced from 100% -> 5%. Affects stamina regeneration
-            private static FormKey MAG_abAthletics40    => ModKey.MakeFormKey(0x0F38D7); // This will be reduced from 10 -> 1%. Affects movement speed
-            private static FormKey MAG_abAthletics60    => ModKey.MakeFormKey(0x153BF7); // This will be reduced from 10-> 2%. Affects movement speed.
-            private static FormKey MAG_abPilgrimAkatosh => ModKey.MakeFormKey(0x098653); // This will be reduced from 10-> 3%. Affects movement speed.
+            private static ModKey ModKey                               = ModKey.FromNameAndExtension("Adamant.esp");         
+            private static FormLink<ISpellGetter> MAG_PerkAgility30    => Skyrim.Spell.PerkWindWalkerStamina.FormKey; // This will be reduced from 50% -> 5%. Affects stamina regeneration. Why magus why...
+            private static FormLink<ISpellGetter> MAG_PerkAgility60    => ModKey.MakeFormKey(0x0F38DA); // This will be reduced from 100% -> 5%. Affects stamina regeneration
+            private static FormLink<ISpellGetter> MAG_abAthletics40    => ModKey.MakeFormKey(0x0F38D7); // This will be reduced from 10 -> 1%. Affects movement speed
+            private static FormLink<ISpellGetter> MAG_abAthletics60    => ModKey.MakeFormKey(0x153BF7); // This will be reduced from 10-> 2%. Affects movement speed.
+            private static FormLink<ISpellGetter> MAG_abPilgrimAkatosh => ModKey.MakeFormKey(0x098653); // This will be reduced from 10-> 3%. Affects movement speed.
 
             public static List<SpellEffectModifier> StaminaSpells = new List<SpellEffectModifier> { 
                 new SpellEffectModifier(MAG_PerkAgility30, 0, 5.0f, "MAG_PerkAgility30"),
@@ -44,9 +46,9 @@ namespace ActionSpeedX
         {
             private static ModKey ModKey = ModKey.FromNameAndExtension("Ordinator - Perks Of Skyrim.esp");
 
-            private static FormKey ORD_Spe_Windborne_Spell_ProcSelf => ModKey.MakeFormKey(0x022D8E); // 15% -> 2% MOvespeed when stacking shouts
-            private static FormKey ORD_Lia_Windrunner_Spell_Ab      => ModKey.MakeFormKey(0x009B8D); // -> 1% movespeed for light armor skill 40
-            private static FormKey ORD_Lia_FightOrFlight_Spell_Ab   => ModKey.MakeFormKey(0x17C1DC); // Stamina regen. 10% -> 3% ??
+            private static FormLink<ISpellGetter> ORD_Spe_Windborne_Spell_ProcSelf => ModKey.MakeFormKey(0x022D8E); // 15% -> 2% MOvespeed when stacking shouts
+            private static FormLink<ISpellGetter> ORD_Lia_Windrunner_Spell_Ab      => ModKey.MakeFormKey(0x009B8D); // -> 1% movespeed for light armor skill 40
+            private static FormLink<ISpellGetter> ORD_Lia_FightOrFlight_Spell_Ab   => ModKey.MakeFormKey(0x17C1DC); // Stamina regen. 10% -> 3% ??
 
             public static List<SpellEffectModifier> StaminaSpells = new List<SpellEffectModifier> {
                 new SpellEffectModifier(ORD_Lia_FightOrFlight_Spell_Ab, 1, 3.0f, "ORD_Lia_FightOrFlight_Spell_Ab"),
@@ -73,9 +75,9 @@ namespace ActionSpeedX
 
             private static ModKey ModKey = ModKey.FromNameAndExtension("Vokrii - Minimalistic Perks of Skyrim.esp");
 
-            private static FormKey VKR_Alc_Adrenaline_Spell_Ab => ModKey.MakeFormKey(0x321427); // Reduce speed buff from 10% -> 4% when using beneficial potions
-            private static FormKey VKR_Lia_Wardancer_Spell_Ab  => ModKey.MakeFormKey(0x335873); // Reduce move speed buff from 10% -> 1%
-            private static FormKey VKR_Lia_Windrunner_Spell_Ab => ModKey.MakeFormKey(0x009B89); // Reduce move speed buff from 10% -> 1%
+            private static FormLink<ISpellGetter> VKR_Alc_Adrenaline_Spell_Ab => ModKey.MakeFormKey(0x321427); // Reduce speed buff from 10% -> 4% when using beneficial potions
+            private static FormLink<ISpellGetter> VKR_Lia_Wardancer_Spell_Ab  => ModKey.MakeFormKey(0x335873); // Reduce move speed buff from 10% -> 1%
+            private static FormLink<ISpellGetter> VKR_Lia_Windrunner_Spell_Ab => ModKey.MakeFormKey(0x009B89); // Reduce move speed buff from 10% -> 1%
 
             public static List<SpellEffectModifier> StaminaSpells = new List<SpellEffectModifier> {};
             public static List<SpellEffectModifier> MoveSpells    = new List<SpellEffectModifier> {
@@ -92,16 +94,16 @@ namespace ActionSpeedX
         /// </summary>
         public class SpellEffectModifier
         {
-            public FormKey formKey; // id
+            public FormLink<ISpellGetter> formLink; // id
             public int effectSlot; // index to modify in effects array
             public float magnitude; // value to set
             public string editorId; // Editor ID in case record throws an error.
-            public SpellEffectModifier(FormKey formkey, int effectSlot, float magnitude, string id)
+            public SpellEffectModifier(FormLink<ISpellGetter> formLink, int effectSlot, float magnitude, string id)
             {
-                this.formKey = formkey;
+                this.formLink   = formlink;
                 this.effectSlot = effectSlot;
-                this.magnitude = magnitude;
-                this.editorId = id;
+                this.magnitude  = magnitude;
+                this.editorId   = id;
             }
         }
     }

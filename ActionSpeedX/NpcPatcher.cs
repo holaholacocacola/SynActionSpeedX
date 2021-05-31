@@ -1,5 +1,7 @@
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.FormKeys.SkyrimSE;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Synthesis;
 using Newtonsoft.Json.Linq;
@@ -8,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
 
 namespace ActionSpeedX
 {
@@ -18,14 +21,15 @@ namespace ActionSpeedX
         private IPatcherState<ISkyrimMod, ISkyrimModGetter> state;
         private ActionSpeedX.Settings settings; // in memory rep of settings.json
         private HashSet<string> racesToPatch; // contains valid races to add perks too.
-        private List<FormKey> perksToAdd; // Contains form ids of perks to add to every npc.
+        
+        private List<FormLink<IPerkGetter>> perksToAdd; // Contains form ids of perks to add to every npc.
 
         public NpcPatcher(IPatcherState<ISkyrimMod, ISkyrimModGetter> state, ActionSpeedX.Settings settings)
         {
-            this.state = state;
-            this.settings = settings;
+            this.state        = state;
+            this.settings     = settings;
             this.racesToPatch = loadRaces();
-            this.perksToAdd = new List<FormKey>();
+            this.perksToAdd   = new();
             
             if (this.settings.AttackSpeed) perksToAdd.AddRange(ActionSpeedX.FormKeys.Perks.AttackSpeed);
 
@@ -45,7 +49,7 @@ namespace ActionSpeedX
         private HashSet<string> loadRaces()
         {
             string file = Path.Combine(this.state.ExtraSettingsDataPath, RACES_FILE); // already validated in callee
-            var races = JObject.Parse(File.ReadAllText(file));
+            var races   = JObject.Parse(File.ReadAllText(file));
             
             Dictionary<string, List<string>>? availableRaces = races.ToObject<Dictionary<string, List<string>>>();
             if (availableRaces == null)
@@ -79,21 +83,21 @@ namespace ActionSpeedX
                     if (npcCopy.Perks == null) npcCopy.Perks = new ExtendedList<PerkPlacement>();
                     foreach (var perk in this.perksToAdd)
                     {
-                        PerkPlacement p = new PerkPlacement { Rank = 1, Perk = perk.AsLink<IPerkGetter>() };
+                        PerkPlacement p = new PerkPlacement { Rank = 1, Perk = perk.FormKey.AsLink<IPerkGetter>() };
                         npcCopy.Perks.Add(p);
                     }
 
                     if (npc.EditorID == "Player" && this.settings.Racials)
                     {
                         // a quest runs after racemenu that will sift and apply the correct racial perk. This perk is removed after.
-                        PerkPlacement p = new PerkPlacement { Rank = 1, Perk = FormKeys.Perks.ASX_DummyPerk.AsLink<IPerkGetter>() };
+                        PerkPlacement p = new PerkPlacement { Rank = 1, Perk = FormKeys.Perks.ASX_DummyPerk.FormKey.AsLink<IPerkGetter>() };
                         npcCopy.Perks.Add(p);
                         continue;
                     }
 
                     if (this.settings.Racials && ActionSpeedX.FormKeys.Perks.RacialPerks.ContainsKey(race.EditorID))
                     {
-                        PerkPlacement p = new PerkPlacement { Rank = 1, Perk = FormKeys.Perks.RacialPerks[race.EditorID].AsLink<IPerkGetter>() };
+                        PerkPlacement p = new PerkPlacement { Rank = 1, Perk = FormKeys.Perks.RacialPerks[race.EditorID].FormKey.AsLink<IPerkGetter>() };
                         npcCopy.Perks.Add(p);
                     }
 
@@ -103,14 +107,14 @@ namespace ActionSpeedX
                         {
                             if (faction.Faction.TryResolve(this.state.LinkCache, out var wtf) && wtf.EditorID != null && ActionSpeedX.FormKeys.Perks.FactionPerks.ContainsKey(wtf.EditorID))
                             {
-                                PerkPlacement p = new PerkPlacement { Rank = 1, Perk = FormKeys.Perks.FactionPerks[wtf.EditorID].AsLink<IPerkGetter>() };
+                                PerkPlacement p = new PerkPlacement { Rank = 1, Perk = FormKeys.Perks.FactionPerks[wtf.EditorID].FormKey.AsLink<IPerkGetter>() };
                                 npcCopy.Perks.Add(p);
                             }
                         }
                     }
                 } catch (Exception e) 
                 {
-                    throw RecordException.Factory("Error processing npc record", npc, e);
+                    throw RecordException.Create("Error processing npc record", npc, e);
                 }
             }
         }
