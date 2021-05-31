@@ -27,11 +27,11 @@ namespace ActionSpeedX
             private static FormLink<ISpellGetter> MAG_abAthletics60    => ModKey.MakeFormKey(0x153BF7); // This will be reduced from 10-> 2%. Affects movement speed.
             private static FormLink<ISpellGetter> MAG_abPilgrimAkatosh => ModKey.MakeFormKey(0x098653); // This will be reduced from 10-> 3%. Affects movement speed.
 
-            public static List<SpellEffectModifier> StaminaSpells = new List<SpellEffectModifier> { 
+            public static readonly List<SpellEffectModifier> StaminaSpells = new List<SpellEffectModifier> { 
                 new SpellEffectModifier(MAG_PerkAgility30, 0, 5.0f, "MAG_PerkAgility30"),
                 new SpellEffectModifier(MAG_PerkAgility60, 0, 5.0f, "MAG_PerkAgility60")
             };
-            public static List<SpellEffectModifier> MoveSpells = new List<SpellEffectModifier> { 
+            public static readonly List<SpellEffectModifier> MoveSpells = new List<SpellEffectModifier> { 
                 new SpellEffectModifier(MAG_abAthletics40, 0, 1.0f, "MAG_abAthletics40"),
                 new SpellEffectModifier(MAG_abAthletics60, 0, 2.0f, "MAG_abAthletics60"),
                 new SpellEffectModifier(MAG_abPilgrimAkatosh, 0, 3.0f, "MAG_abPilgrimAkatosh")                                                                      
@@ -50,12 +50,12 @@ namespace ActionSpeedX
             private static FormLink<ISpellGetter> ORD_Lia_Windrunner_Spell_Ab      => ModKey.MakeFormKey(0x009B8D); // -> 1% movespeed for light armor skill 40
             private static FormLink<ISpellGetter> ORD_Lia_FightOrFlight_Spell_Ab   => ModKey.MakeFormKey(0x17C1DC); // Stamina regen. 10% -> 3% ??
 
-            public static List<SpellEffectModifier> StaminaSpells = new List<SpellEffectModifier> {
+            public static readonly List<SpellEffectModifier> StaminaSpells = new List<SpellEffectModifier> {
                 new SpellEffectModifier(ORD_Lia_FightOrFlight_Spell_Ab, 1, 3.0f, "ORD_Lia_FightOrFlight_Spell_Ab"),
 
             };
 
-            public static List<SpellEffectModifier> MoveSpells = new List<SpellEffectModifier> {
+            public static readonly List<SpellEffectModifier> MoveSpells = new List<SpellEffectModifier> {
                 new SpellEffectModifier(ORD_Lia_Windrunner_Spell_Ab, 0, 1.0f, "ORD_Lia_Windrunner_Spell_Ab"),
                 new SpellEffectModifier(ORD_Spe_Windborne_Spell_ProcSelf, 0, 2.0f, "ORD_Spe_Windborne_Spell_ProcSelf"),
             };
@@ -79,8 +79,8 @@ namespace ActionSpeedX
             private static FormLink<ISpellGetter> VKR_Lia_Wardancer_Spell_Ab  => ModKey.MakeFormKey(0x335873); // Reduce move speed buff from 10% -> 1%
             private static FormLink<ISpellGetter> VKR_Lia_Windrunner_Spell_Ab => ModKey.MakeFormKey(0x009B89); // Reduce move speed buff from 10% -> 1%
 
-            public static List<SpellEffectModifier> StaminaSpells = new List<SpellEffectModifier> {};
-            public static List<SpellEffectModifier> MoveSpells    = new List<SpellEffectModifier> {
+            public static readonly List<SpellEffectModifier> StaminaSpells = new List<SpellEffectModifier> {};
+            public static readonly List<SpellEffectModifier> MoveSpells    = new List<SpellEffectModifier> {
                 new SpellEffectModifier(VKR_Alc_Adrenaline_Spell_Ab, 0, 4.0f, "VKR_Alc_Adrenaline_Spell_Ab"),
                 new SpellEffectModifier(VKR_Lia_Wardancer_Spell_Ab, 2, 1.0f, "VKR_Lia_Wardancer_Spell_Ab"),
                 new SpellEffectModifier(VKR_Lia_Windrunner_Spell_Ab, 0, 1.0f, "VKR_Lia_Winrunner_Spell_Ab"),
@@ -100,7 +100,7 @@ namespace ActionSpeedX
             public string editorId; // Editor ID in case record throws an error.
             public SpellEffectModifier(FormLink<ISpellGetter> formLink, int effectSlot, float magnitude, string id)
             {
-                this.formLink   = formlink;
+                this.formLink   = formLink;
                 this.effectSlot = effectSlot;
                 this.magnitude  = magnitude;
                 this.editorId   = id;

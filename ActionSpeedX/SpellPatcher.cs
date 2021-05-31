@@ -14,8 +14,8 @@ namespace ActionSpeedX
         static ModKey Vokrii    = ModKey.FromNameAndExtension("Vokrii - Minimalistic Perks of Skyrim.esp");
         static ModKey Ordinator = ModKey.FromNameAndExtension("Ordinator - Perks Of Skyrim.esp");
         
-        private IPatcherState<ISkyrimMod, ISkyrimModGetter> state;
-        private ActionSpeedX.Settings settings; // in memory rep of settings.json
+        private readonly IPatcherState<ISkyrimMod, ISkyrimModGetter> state;
+        private readonly ActionSpeedX.Settings settings; // in memory rep of settings.json
         public SpellPatcher(IPatcherState<ISkyrimMod, ISkyrimModGetter> state, ActionSpeedX.Settings settings)
         {
             this.state = state;

@@ -18,17 +18,17 @@ namespace ActionSpeedX
     {
         const string RACES_FILE = "races.json";
 
-        private IPatcherState<ISkyrimMod, ISkyrimModGetter> state;
-        private ActionSpeedX.Settings settings; // in memory rep of settings.json
-        private HashSet<string> racesToPatch; // contains valid races to add perks too.
+        private readonly IPatcherState<ISkyrimMod, ISkyrimModGetter> state;
+        private readonly ActionSpeedX.Settings settings; // in memory rep of settings.json
+        private readonly HashSet<string> racesToPatch; // contains valid races to add perks too.
         
-        private List<FormLink<IPerkGetter>> perksToAdd; // Contains form ids of perks to add to every npc.
+        private readonly List<FormLink<IPerkGetter>> perksToAdd; // Contains form ids of perks to add to every npc.
 
         public NpcPatcher(IPatcherState<ISkyrimMod, ISkyrimModGetter> state, ActionSpeedX.Settings settings)
         {
             this.state        = state;
             this.settings     = settings;
-            this.racesToPatch = loadRaces();
+            this.racesToPatch = LoadRaces();
             this.perksToAdd   = new();
             
             if (this.settings.AttackSpeed) perksToAdd.AddRange(ActionSpeedX.FormKeys.Perks.AttackSpeed);
@@ -46,7 +46,7 @@ namespace ActionSpeedX
             if (this.settings.SpellCosts) perksToAdd.AddRange(ActionSpeedX.FormKeys.Perks.SpellCosts);
         }
 
-        private HashSet<string> loadRaces()
+        private HashSet<string> LoadRaces()
         {
             string file = Path.Combine(this.state.ExtraSettingsDataPath, RACES_FILE); // already validated in callee
             var races   = JObject.Parse(File.ReadAllText(file));

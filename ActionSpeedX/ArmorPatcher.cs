@@ -1,5 +1,6 @@
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.FormKeys.SkyrimSE;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Synthesis;
 using Newtonsoft.Json.Linq;
@@ -8,6 +9,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
+using Mutagen.Bethesda.Plugins.Exceptions;
 
 namespace ActionSpeedX
 {
@@ -34,15 +36,15 @@ namespace ActionSpeedX
         const string BOOTS     = "Boots";
         const string SHIELD    = "Shield";
 
-        const string MATERIALS_FILE = "armor_materials.json";
+        const string MATERIALS_FILE    = "armor_materials.json";
         const string DESCRIPTIONS_FILE = "armor_descriptions.json";
 
 
-        private IPatcherState<ISkyrimMod, ISkyrimModGetter> state;
-        private ActionSpeedX.Settings settings; // in memory rep of settings.json
-        private Dictionary<string, bool> descriptionSettings; 
-        private JObject armorDescriptions; // in memory rep of armor_descriptions.json
-        private Dictionary<string, int> materialRanks; // In memory rep of armor_materials.json
+        private readonly IPatcherState<ISkyrimMod, ISkyrimModGetter> state;
+        private readonly ActionSpeedX.Settings settings; // in memory rep of settings.json
+        private readonly Dictionary<string, bool> descriptionSettings; 
+        private readonly JObject armorDescriptions; // in memory rep of armor_descriptions.json
+        private readonly Dictionary<string, int> materialRanks; // In memory rep of armor_materials.json
 
         public ArmorPatcher(IPatcherState<ISkyrimMod, ISkyrimModGetter> state, ActionSpeedX.Settings settings)
         {
@@ -59,8 +61,8 @@ namespace ActionSpeedX
                 {STAMINA, this.settings.StaminaRegen }
             };
 
-            this.materialRanks = loadMaterialsFromDisk();
-            this.armorDescriptions = loadDescriptionsFromDisk();
+            this.materialRanks     = LoadMaterialsFromDisk();
+            this.armorDescriptions = LoadDescriptionsFromDisk();
         }
 
         public void PatchArmors()
@@ -76,11 +78,10 @@ namespace ActionSpeedX
                 try
                 {
 
-
                     if (armor.EditorID == null || armor.Keywords == null || armor.BodyTemplate == null || armor.BodyTemplate.ArmorType == ArmorType.Clothing) continue;
 
                     string armorType;
-                    Dictionary<string, List<FormKey>> armorKeysMap;
+                    Dictionary<string, List<FormLink<IKeywordGetter>>> armorKeysMap;
                     if (armor.BodyTemplate.ArmorType == ArmorType.LightArmor)
                     {
                         armorKeysMap = ActionSpeedX.FormKeys.Keywords.LightArmorKeywordCollection;
@@ -112,9 +113,8 @@ namespace ActionSpeedX
 
                     if (tier < 0)
                     {
-                        Console.WriteLine($"No recognized material type for {armor.EditorID}. Skipping. ");
-                        // tier = 1;
-                        continue;
+                        Console.WriteLine($"No recognized material type for {armor.EditorID}. Defaulting to 2. ");
+                        tier = 1;
                     }
                     else
                     {
@@ -122,11 +122,11 @@ namespace ActionSpeedX
                     }
                     string slot;
 
-                    if (armor.Keywords.Contains(Skyrim.Keyword.ArmorBoots)) slot = BOOTS;
-                    else if (armor.Keywords.Contains(Skyrim.Keyword.ArmorCuirass)) slot = CUIRASS;
+                    if (armor.Keywords.Contains(Skyrim.Keyword.ArmorBoots)) slot          = BOOTS;
+                    else if (armor.Keywords.Contains(Skyrim.Keyword.ArmorCuirass)) slot   = CUIRASS;
                     else if (armor.Keywords.Contains(Skyrim.Keyword.ArmorGauntlets)) slot = GAUNTLETS;
-                    else if (armor.Keywords.Contains(Skyrim.Keyword.ArmorHelmet)) slot = HELMET;
-                    else if (armor.Keywords.Contains(Skyrim.Keyword.ArmorShield)) slot = SHIELD;
+                    else if (armor.Keywords.Contains(Skyrim.Keyword.ArmorHelmet)) slot    = HELMET;
+                    else if (armor.Keywords.Contains(Skyrim.Keyword.ArmorShield)) slot    = SHIELD;
                     else
                     {
                         Console.WriteLine("No matching equip slot for " + armor.EditorID);
@@ -135,10 +135,10 @@ namespace ActionSpeedX
                     var nw = state.PatchMod.Armors.GetOrAddAsOverride(armor);
                     nw.Keywords?.Add(armorKeysMap[slot][tier]);
                     if (this.settings.Descriptions) PatchArmorDescription(nw, armorType, slot, tier);
+
                 } catch (Exception e)
-                
                 {
-                    throw RecordException.Factory("Error processing armor record", armor, e);
+                    throw RecordException.Create("Error processing armor record", armor, e);
                 }
             }
         }
@@ -161,13 +161,16 @@ namespace ActionSpeedX
                     try
                     {
                         string description = "";
-                        string magnitude = "";
-                        JToken? dex = this.armorDescriptions.SelectToken($"Descriptions.{item.Key}");
+                        string magnitude   = "";
+                        JToken? dex        = this.armorDescriptions.SelectToken($"Descriptions.{item.Key}");
+
                         if (dex != null)
                         {
                             description = dex.ToString();
                         }
+                        
                         JToken? mag = this.armorDescriptions.SelectToken($"Magnitudes.{armorSlot}.{item.Key}.{armorType}[{armorTier}]");
+                        
                         if (mag != null)
                         {
                             magnitude = mag.ToString();
@@ -199,7 +202,7 @@ namespace ActionSpeedX
         }
 
 
-        private Dictionary<string, int> loadMaterialsFromDisk()
+        private Dictionary<string, int> LoadMaterialsFromDisk()
         {
             string file = Path.Combine(this.state.ExtraSettingsDataPath, MATERIALS_FILE); // already validated in callee
             var armorMaterials = JObject.Parse(File.ReadAllText(file));
@@ -211,7 +214,7 @@ namespace ActionSpeedX
             return materials;
         }
 
-        private JObject loadDescriptionsFromDisk()
+        private JObject LoadDescriptionsFromDisk()
         {
             string file = Path.Combine(this.state.ExtraSettingsDataPath, DESCRIPTIONS_FILE); // already validated in callee
             return JObject.Parse(File.ReadAllText(file));
