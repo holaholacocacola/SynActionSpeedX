@@ -5,7 +5,6 @@ using Mutagen.Bethesda;
 using Mutagen.Bethesda.Synthesis;
 using Mutagen.Bethesda.Skyrim;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace ActionSpeedX
 {
