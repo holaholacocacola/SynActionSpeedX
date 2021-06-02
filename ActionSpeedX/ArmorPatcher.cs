@@ -142,6 +142,12 @@ namespace ActionSpeedX
                 }
             }
         }
+
+        private void PatchArmorVmad(Armor armor, string armorType, string armorSlot, int armorTier)
+        {
+            //copy armor script. 
+            
+        }
         
         private void PatchArmorDescription(Armor armor, string armorType, string armorSlot, int armorTier)
         {
