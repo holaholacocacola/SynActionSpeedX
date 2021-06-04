@@ -82,10 +82,12 @@ namespace ActionSpeedX
 
                     string armorType;
                     Dictionary<string, List<FormLink<IKeywordGetter>>> armorKeysMap;
+                    ActionSpeedX.FormKeys.ArmorActionSpells spellsToAdd;
                     if (armor.BodyTemplate.ArmorType == ArmorType.LightArmor)
                     {
                         armorKeysMap = ActionSpeedX.FormKeys.Keywords.LightArmorKeywordCollection;
                         armorType = LIGHT;
+
                     }
                     else
                     {
@@ -135,6 +137,23 @@ namespace ActionSpeedX
                     var nw = state.PatchMod.Armors.GetOrAddAsOverride(armor);
                     nw.Keywords?.Add(armorKeysMap[slot][tier]);
                     if (this.settings.Descriptions) PatchArmorDescription(nw, armorType, slot, tier);
+                    if (armorType == LIGHT)
+                    {
+                        spellsToAdd = ActionSpeedX.FormKeys.ActionSpeedXSpells.LightArmorActionSpellCollection[slot][tier]; // expect an error here?
+                    }
+                    else
+                    {
+                        spellsToAdd = ActionSpeedX.FormKeys.ActionSpeedXSpells.HeavyArmorActionSpellCollection[slot][tier]; // expect an error here?
+                    }
+
+                    if (nw.VirtualMachineAdapter != null)
+                    {
+                        //nw.VirtualMachineAdapter.Scripts.Add
+                    }
+                    else
+                    {
+                        nw.VirtualMachineAdapter = new();
+                    }
 
                 } catch (Exception e)
                 {
@@ -143,11 +162,6 @@ namespace ActionSpeedX
             }
         }
 
-        private void PatchArmorVmad(Armor armor, string armorType, string armorSlot, int armorTier)
-        {
-            //copy armor script. 
-            
-        }
         
         private void PatchArmorDescription(Armor armor, string armorType, string armorSlot, int armorTier)
         {

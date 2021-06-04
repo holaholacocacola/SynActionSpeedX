@@ -75,20 +75,20 @@ namespace ActionSpeedX
 
         private bool AdjustEffect(ActionSpeedX.FormKeys.SpellEffectModifier spellToModify)
         {
-            if (!this.state.LinkCache.TryResolve<ISpellGetter>(spellToModify.formLink.FormKey, out var spell))
+            if (!this.state.LinkCache.TryResolve<ISpellGetter>(spellToModify.SpellForm.FormKey, out var spell))
             {
-                Console.Out.WriteLine($"Could not resolve form key for: {spellToModify.editorId}");
+                Console.Out.WriteLine($"Could not resolve form key for: {spellToModify.EditorId}");
                 return false;
             }
             var modifiedSpell = spell.DeepCopy();
-            var effect = modifiedSpell.Effects[spellToModify.effectSlot];
+            var effect = modifiedSpell.Effects[spellToModify.EffectSlot];
             if (effect.Data == null)
             {
-                Console.Out.WriteLine($"{spellToModify.editorId} has no effects.");
+                Console.Out.WriteLine($"{spellToModify.EditorId} has no effects.");
                 return false;
             }
 
-            effect.Data.Magnitude = spellToModify.magnitude;
+            effect.Data.Magnitude = spellToModify.Magnitude;
             state.PatchMod.Spells.Add(modifiedSpell);
             return true;
         }
