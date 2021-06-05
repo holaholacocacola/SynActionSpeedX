@@ -51,12 +51,17 @@ namespace ActionSpeedX
             if (! requiredFiles.All(value => foundFiles.Contains(value)))
                 throw new Exception("Missing one of the following json files in the Data folder: armor_descriptions, armor_materials, races"); 
 
-            // PerkMod Patcher. Modifies magnitudes.
+            // Spell Patcher. Modifies magnitudes.
             if (Settings.BalancePerkMods)
             {
                 ActionSpeedX.SpellPatcher spellPatcher = new SpellPatcher(state, Settings);
                 if(!spellPatcher.PatchSpells()) throw new Exception("Error encountered while balancing perks. Check logs.");
             }
+
+            // Global Patcher. Sets Effects Flags
+            Console.WriteLine("Patchint Settings");
+            GlobalPatcher globalPatcher = new GlobalPatcher(state, Settings);
+            globalPatcher.PatchGlobals();
 
             // Armor Patcher. Adds keywords
             Console.WriteLine("Patching armors");

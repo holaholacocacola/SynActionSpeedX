@@ -14,5 +14,6 @@ namespace ActionSpeedX
         public bool Racials { get; set; } = true;
         public bool Factions { get; set; } = true;
         public bool BalancePerkMods { get; set; } = true;
+        public bool CuirassOnly { get; set; } = false;
     }
 }
