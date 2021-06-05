@@ -36,6 +36,12 @@ namespace ActionSpeedX
         const string BOOTS     = "Boots";
         const string SHIELD    = "Shield";
 
+        const string ATTACK_SPELL  = "ASX_AttackSpell";
+        const string MOVE_SPELL    = "ASX_MoveSpell";
+        const string RANGED_SPELL  = "ASX_RangedSpell";
+        const string MAGICKA_SPELL = "ASX_MagickaSpell";
+        const string STAMINA_SPELL = "ASX_StaminaSpell";
+
         const string MATERIALS_FILE    = "armor_materials.json";
         const string DESCRIPTIONS_FILE = "armor_descriptions.json";
 
@@ -71,8 +77,22 @@ namespace ActionSpeedX
              * 1. Loop over all armors.
              * 2. For each armor, iterate over its keywords and match it to the tier rank in armor_rankings.json. Grab the HIGHEST tier.
              * 3. Based on that tier + armor slot + armor type, assign it a keyword from the appropiate ASX_<armor> keyword from Light/HeavyArmorKeywordCollection
-             * 4. If description setting is turned on, update the item description.
+             * 4. Based on tier, slot, armortype, attach the armor script and modify its properties to add the appropriate spells(by form id)
+             * 5. If description setting is turned on, update the item description.
              */
+
+
+            ScriptEntry templateArmorScript, templateShieldScript;
+            if (!ActionSpeedX.FormKeys.Armor.ASX_ArmorTemplate.TryResolve(this.state.LinkCache, out var templateArmor))
+            {
+                throw new Exception("Could not resolve armor template");
+            }
+            if (templateArmor.VirtualMachineAdapter == null || templateArmor.VirtualMachineAdapter.Scripts == null)
+            {
+                throw new Exception("Could not resolve template script");
+            }
+            templateArmorScript = templateArmor.VirtualMachineAdapter.Scripts[0].DeepCopy();
+
             foreach (var armor in this.state.LoadOrder.PriorityOrder.WinningOverrides<IArmorGetter>())
             {
                 try
@@ -136,7 +156,8 @@ namespace ActionSpeedX
                     }
                     var nw = state.PatchMod.Armors.GetOrAddAsOverride(armor);
                     nw.Keywords?.Add(armorKeysMap[slot][tier]);
-                    if (this.settings.Descriptions) PatchArmorDescription(nw, armorType, slot, tier);
+
+                    // Attach script
                     if (armorType == LIGHT)
                     {
                         spellsToAdd = ActionSpeedX.FormKeys.ActionSpeedXSpells.LightArmorActionSpellCollection[slot][tier]; // expect an error here?
@@ -146,14 +167,25 @@ namespace ActionSpeedX
                         spellsToAdd = ActionSpeedX.FormKeys.ActionSpeedXSpells.HeavyArmorActionSpellCollection[slot][tier]; // expect an error here?
                     }
 
-                    if (nw.VirtualMachineAdapter != null)
+                    // Calc script to add
+
+                    ScriptEntry scriptCopy = templateArmorScript.DeepCopy();
+                    foreach (ScriptObjectProperty property in scriptCopy.Properties)
                     {
-                        //nw.VirtualMachineAdapter.Scripts.Add
+                        // TODD: use a map
+                        if (property.Name == ATTACK_SPELL) property.Object.FormKey = spellsToAdd.AttackSpell.FormKey;
+                        else if (property.Name == MOVE_SPELL) property.Object.FormKey = spellsToAdd.SpeedSpell.FormKey;
+                        else if (property.Name == STAMINA_SPELL) property.Object.FormKey = spellsToAdd.StaminaSpell.FormKey;
+                        else if (property.Name == MAGICKA_SPELL) property.Object.FormKey = spellsToAdd.MagickaSpell.FormKey;
+                        else if (property.Name == RANGED_SPELL && spellsToAdd.RangedAttackSpell != null) property.Object.FormKey = spellsToAdd.RangedAttackSpell.FormKey;// useless chec
                     }
-                    else
-                    {
-                        nw.VirtualMachineAdapter = new();
-                    }
+
+                    if (nw.VirtualMachineAdapter == null) nw.VirtualMachineAdapter = new();
+                    nw.VirtualMachineAdapter.Scripts.Add(scriptCopy);
+
+                    if (this.settings.Descriptions) PatchArmorDescription(nw, armorType, slot, tier);
+                    
+
 
                 } catch (Exception e)
                 {
