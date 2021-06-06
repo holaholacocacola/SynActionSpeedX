@@ -2,12 +2,13 @@ using System.Collections.Generic;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.FormKeys.SkyrimSE;
 
 namespace ActionSpeedX
 {
     public static partial class FormKeys
     {
-        public static class Perks
+        public static class ActionSpeedXPerks
         {
             private static readonly ModKey ModKey = ModKey.FromNameAndExtension("ActionSpeedX.esp");
 
@@ -222,6 +223,127 @@ namespace ActionSpeedX
             */
 
 
+        }
+
+        /// <summary>
+        /// This contains a perk records form id, ability(spell) to append, and description update(if any)
+        ///
+        /// </summary>
+        public class PerkModifier
+        {
+            public FormLink<ISpellGetter> SpellForm; // Ability id
+            public FormLink<IPerkGetter> PerkForm; // Perk id
+            public string Description; // Appends text to Perk
+
+            public PerkModifier(FormLink<IPerkGetter> perkForm, FormLink<ISpellGetter> spellForm, string dsecription)
+            {
+                this.SpellForm   = spellForm;
+                this.PerkForm    = perkForm;
+                this.Description = dsecription;
+            }
+        }
+
+        public static class AdamantPerks
+        {
+            //private static readonly ModKey ModKey = ModKey.FromNameAndExtension("Adamant.esp");
+
+            // Power attacks
+            private static FormLink<IPerkGetter> MAG_Philosopher00  => Skyrim.Perk.AlterationNovice00;
+            private static FormLink<IPerkGetter> MAG_Summoner00     => Skyrim.Perk.ConjurationNovice00;
+            private static FormLink<IPerkGetter> MAG_Elementalist00 => Skyrim.Perk.DestructionNovice00;
+            private static FormLink<IPerkGetter> MAG_Illusionist00  => Skyrim.Perk.IllusionNovice00;
+            private static FormLink<IPerkGetter> MAG_Healer00       => Skyrim.Perk.RestorationNovice00;
+
+            private static FormLink<IPerkGetter> MAG_Marksman00 => Skyrim.Perk.Overdraw00;
+            private static FormLink<IPerkGetter> MAG_Juggernaut00 => Skyrim.Perk.Juggernaut00;
+            private static FormLink<IPerkGetter> MAG_Scout00 => Skyrim.Perk.AgileDefender00;
+            private static FormLink<IPerkGetter> MAG_Skirmisher00 => Skyrim.Perk.Armsman00;
+            private static FormLink<IPerkGetter> MAG_Barbarian00 => Skyrim.Perk.Barbarian00;
+
+            /*
+             * MAG_Philosopher00 Alteration
+			 MAG_Summoner00 Conjur
+			 MAG_Elementalist00 Destruction
+			 MAG_Illusionist00
+			 MAG_Healer00
+			 
+			 
+			 MAG_Juggernaut00 heavy-armor
+			 MAG_Scout00 light-armor
+			 
+			 MAG_Skirmisher00 one-handed
+			 MAG_Barbarian00 two-handed
+			
+			
+			MAG_Marksman00 Archery
+             */
+        }
+
+        public static class OrdinatorPerks
+        {
+            private static readonly ModKey ModKey = ModKey.FromNameAndExtension("Ordinator - Perks of Skyrim.esp");
+
+            // Power attacks
+            private static FormLink<IPerkGetter> ORD_Alt00_AlterationMastery_Perk_00  => ModKey.MakeFormKey(0x0148ff); 
+            private static FormLink<IPerkGetter> ORD_Con00_ConjurationMastery_Perk_00 => ModKey.MakeFormKey(0x014900); 
+            private static FormLink<IPerkGetter> ORD_Des00_DestructionMastery_Perk_00 => ModKey.MakeFormKey(0X0148FD); 
+            private static FormLink<IPerkGetter> ORD_Ill00_IllusionMastery_Perk_00    => ModKey.MakeFormKey(0X0148FE);
+            private static FormLink<IPerkGetter> ORD_Res00_RestorationMastery_Perk_00 => ModKey.MakeFormKey(0X014357);
+            private static FormLink<IPerkGetter> ORD_Arc00_ArcheryMastery_Perk_00     => ModKey.MakeFormKey(0x00ABE1);
+            private static FormLink<IPerkGetter> ORD_Hea00_HeavyArmorMastery_Perk_00  => ModKey.MakeFormKey(0x007AB2);
+            private static FormLink<IPerkGetter> ORD_Lia00_LightArmorMastery_Perk_00  => ModKey.MakeFormKey(0x007AB0);
+            private static FormLink<IPerkGetter> ORD_One00_OneHandedMastery_Perk_00   => ModKey.MakeFormKey(0x00B149);
+            private static FormLink<IPerkGetter> ORD_Two00_TwoHandedMastery_Perk_00   => ModKey.MakeFormKey(0x00B14B);
+
+
+            /*
+             * (ORD_Alt00_AlterationMastery_Perk_00,
+			 ORD_Con00_ConjurationMastery_Perk_00,
+			 ORD_Des00_DestructionMastery_Perk_00,
+			 ORD_Ill00_IllusionMastery_Perk_00,
+			 ORD_Res00_RestorationMastery_Perk_00
+			 
+			 ORD_Arc00_ArcheryMastery_Perk_00,
+			 ORD_Hea00_HeavyArmorMastery_Perk_00, ORD_HeaNPC_HeavyArmorMastery_Perk_00_WasJuggernaut_OrdASISExclude 
+			 ORD_Lia00_LightArmorMastery_Perk_00, ORD_LiaNPC_LightArmorMastery_Perk_00_WasAgileDefender_OrdASISExclude
+			 ORD_One00_OneHandedMastery_Perk_00
+			 ORD_Two00_TwoHandedMastery_Perk_00
+             */
+        }
+
+        public static class VokriiPerks
+        {
+            //private static readonly ModKey ModKey = ModKey.FromNameAndExtension("Vokrii - Minimalistic Perks of Skyrim.esp");
+
+            // Power attacks
+            private static FormLink<IPerkGetter> VKR_Alt_000_AlterationMastery_Perk_WasAlteration1    => Skyrim.Perk.AlterationNovice00;
+            private static FormLink<IPerkGetter> VKR_Con_000_ConjurationMastery_Perk_WasConjuration1  => Skyrim.Perk.ConjurationNovice00;
+            private static FormLink<IPerkGetter> VKR_Des_000_DestructionMastery_Perk_WasDestruction1  => Skyrim.Perk.DestructionNovice00;
+            private static FormLink<IPerkGetter> VKR_Ill_000_IllusionMastery_Perk_WasIllusion1        => Skyrim.Perk.IllusionNovice00;
+            private static FormLink<IPerkGetter> VKR_Res_000_RestorationMastery_Perk_WasRestoration1  => Skyrim.Perk.RestorationNovice00;
+            private static FormLink<IPerkGetter> VKR_Arc_000_ArcheryMastery_Perk_WasOverdraw1         => Skyrim.Perk.Overdraw00;
+            private static FormLink<IPerkGetter> VKR_Hea_000_HeavyArmorMastery_Perk_WasJuggernaut1    => Skyrim.Perk.Juggernaut00;
+            private static FormLink<IPerkGetter> VKR_Lia_000_LightArmorMastery_Perk_WasAgileDefender1 => Skyrim.Perk.AgileDefender00;
+            private static FormLink<IPerkGetter> VKR_One_000_OneHandedMastery_Perk_WasArmsman1        => Skyrim.Perk.Armsman00;
+            private static FormLink<IPerkGetter> VKR_Two_000_TwoHandedMastery_Perk_WasBarbarian1      => Skyrim.Perk.Barbarian00;
+
+
+
+
+
+
+
+            /*
+             * (VKR_Alt_000_AlterationMastery_Perk_WasAlteration1, 
+			 VKR_Con_000_ConjurationMastery_Perk_WasConjuration1, 
+			 VKR_Des_000_DestructionMastery_Perk_WasDestruction1, 
+			 VKR_Ill_000_IllusionMastery_Perk_WasIllusion1, 
+			 VKR_Res_000_RestorationMastery_Perk_WasRestoration1
+			 VKR_Arc_000_ArcheryMastery_Perk_WasOverdraw1, 
+			 VKR_Hea_000_HeavyArmorMastery_Perk_WasJuggernaut1
+			 VKR_Lia_000_LightArmorMastery_Perk_WasAgileDefender1
+			 VKR_One_000_OneHandedMastery_Perk_WasArmsman1
+             */
         }
     }
 }

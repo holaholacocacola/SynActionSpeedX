@@ -83,15 +83,17 @@ namespace ActionSpeedX
 
 
             ScriptEntry templateArmorScript, templateShieldScript;
-            if (!ActionSpeedX.FormKeys.Armor.ASX_ArmorTemplate.TryResolve(this.state.LinkCache, out var templateArmor))
+            if (!FormKeys.Armor.ASX_ArmorTemplate.TryResolve(this.state.LinkCache, out var templateArmor) || !FormKeys.Armor.ASX_ShieldTemplate.TryResolve(this.state.LinkCache, out var templateShield))
             {
-                throw new Exception("Could not resolve armor template");
+                throw new Exception("Could not resolve armor templates");
             }
-            if (templateArmor.VirtualMachineAdapter == null || templateArmor.VirtualMachineAdapter.Scripts == null)
+            if (templateArmor.VirtualMachineAdapter == null || templateArmor.VirtualMachineAdapter.Scripts == null || templateShield.VirtualMachineAdapter == null || templateShield.VirtualMachineAdapter.Scripts == null)
             {
-                throw new Exception("Could not resolve template script");
+                throw new Exception("Could not resolve armor template scripts");
             }
-            templateArmorScript = templateArmor.VirtualMachineAdapter.Scripts[0].DeepCopy();
+            templateArmorScript  = templateArmor.VirtualMachineAdapter.Scripts[0].DeepCopy();
+            templateShieldScript = templateShield.VirtualMachineAdapter.Scripts[0].DeepCopy();
+
 
             foreach (var armor in this.state.LoadOrder.PriorityOrder.WinningOverrides<IArmorGetter>())
             {
@@ -135,8 +137,15 @@ namespace ActionSpeedX
 
                     if (tier < 0)
                     {
-                        Console.WriteLine($"No recognized material type for {armor.EditorID}. Defaulting to 2. ");
-                        tier = 1;
+                        if (armor.EditorID.Contains("ArmorGuard"))
+                        {
+                            tier = 1;
+                        }
+                        else
+                        {
+                            Console.WriteLine($"No recognized material type for {armor.EditorID}. Skipping. File an issue if it must be included.");
+                            continue;
+                        }
                     }
                     else
                     {
@@ -157,7 +166,7 @@ namespace ActionSpeedX
                     var nw = state.PatchMod.Armors.GetOrAddAsOverride(armor);
                     nw.Keywords?.Add(armorKeysMap[slot][tier]);
 
-                    // Attach script
+                    // Attach script spells
                     if (armorType == LIGHT)
                     {
                         spellsToAdd = ActionSpeedX.FormKeys.ActionSpeedXSpells.LightArmorActionSpellCollection[slot][tier]; // expect an error here?
@@ -169,7 +178,7 @@ namespace ActionSpeedX
 
                     // Calc script to add
 
-                    ScriptEntry scriptCopy = templateArmorScript.DeepCopy();
+                    ScriptEntry scriptCopy = slot == SHIELD ? templateShieldScript.DeepCopy() : templateArmorScript.DeepCopy();
                     foreach (ScriptObjectProperty property in scriptCopy.Properties)
                     {
                         // TODD: use a map
@@ -177,7 +186,7 @@ namespace ActionSpeedX
                         else if (property.Name == MOVE_SPELL) property.Object.FormKey = spellsToAdd.SpeedSpell.FormKey;
                         else if (property.Name == STAMINA_SPELL) property.Object.FormKey = spellsToAdd.StaminaSpell.FormKey;
                         else if (property.Name == MAGICKA_SPELL) property.Object.FormKey = spellsToAdd.MagickaSpell.FormKey;
-                        else if (property.Name == RANGED_SPELL && spellsToAdd.RangedAttackSpell != null) property.Object.FormKey = spellsToAdd.RangedAttackSpell.FormKey;// useless chec
+                        else if (property.Name == RANGED_SPELL && spellsToAdd.RangedAttackSpell != null) property.Object.FormKey = spellsToAdd.RangedAttackSpell.FormKey;// useless check but we did set the field as nullable because of laziness
                     }
 
                     if (nw.VirtualMachineAdapter == null) nw.VirtualMachineAdapter = new();
