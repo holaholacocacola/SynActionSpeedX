@@ -8,7 +8,27 @@ namespace ActionSpeedX
 {
     public static partial class FormKeys
     {
+        /// <summary>
+        /// 
+        /// This contains the 5 spell components that are attached to armors excluding shields.
+        /// </summary>
+        public class ArmorActionSpells
+        {
+            public FormLink<ISpellGetter> AttackSpell;
+            public FormLink<ISpellGetter>? RangedAttackSpell;
+            public FormLink<ISpellGetter> SpeedSpell;
+            public FormLink<ISpellGetter> MagickaSpell;
+            public FormLink<ISpellGetter> StaminaSpell;
 
+            public ArmorActionSpells(FormLink<ISpellGetter> attack, FormLink<ISpellGetter>? rangedAttack, FormLink<ISpellGetter> speed, FormLink<ISpellGetter> magicka, FormLink<ISpellGetter> stamina)
+            {
+                this.AttackSpell = attack;
+                this.RangedAttackSpell = rangedAttack;
+                this.SpeedSpell = speed;
+                this.MagickaSpell = magicka;
+                this.StaminaSpell = stamina;
+            }
+        }
 
         public static class ActionSpeedXSpells
         {
@@ -366,6 +386,41 @@ namespace ActionSpeedX
                 { "Shield", HeavyShieldSpells }
             };
 
+            /********************************************************************Passives***********************************************************************************/
+
+            public static FormLink<ISpellGetter> ASX_AlterationMagickaRegenAbility  => ModKey.MakeFormKey(0x28c4);
+            public static FormLink<ISpellGetter> ASX_ConjurationMagickaRegenAbility => ModKey.MakeFormKey(0x28c2);
+            public static FormLink<ISpellGetter> ASX_DestructionMagickaRegenAbility => ModKey.MakeFormKey(0x28c0);
+            public static FormLink<ISpellGetter> ASX_RestorationMagickaRegenAbility => ModKey.MakeFormKey(0x28c8);
+            public static FormLink<ISpellGetter> ASX_IllusionMagickaRegenAbility    => ModKey.MakeFormKey(0x28c6);
+
+            public static FormLink<ISpellGetter> ASX_ArcheryAttackSpeedBoostAbility1   => ModKey.MakeFormKey(0x6f77);
+            public static FormLink<ISpellGetter> ASX_ArcheryAttackSpeedBoostAbility2   => ModKey.MakeFormKey(0x6f79);
+            public static FormLink<ISpellGetter> ASX_ArcheryAttackSpeedBoostAbility3   => ModKey.MakeFormKey(0x6f7b);
+            public static FormLink<ISpellGetter> ASX_ArcheryAttackSpeedBoostAbility4   => ModKey.MakeFormKey(0x6f7d);
+
+            public static FormLink<ISpellGetter> ASX_OneHandedAttackSpeedBoostAbility1 => ModKey.MakeFormKey(0x6f68);
+            public static FormLink<ISpellGetter> ASX_OneHandedAttackSpeedBoostAbility2 => ModKey.MakeFormKey(0x6f69);
+            public static FormLink<ISpellGetter> ASX_OneHandedAttackSpeedBoostAbility3 => ModKey.MakeFormKey(0x6f6b);
+            public static FormLink<ISpellGetter> ASX_OneHandedAttackSpeedBoostAbility4 => ModKey.MakeFormKey(0x6f6d);
+            
+            public static FormLink<ISpellGetter> ASX_TwoHandedAttackSpeedBoostAbility1 => ModKey.MakeFormKey(0x6f6f);
+            public static FormLink<ISpellGetter> ASX_TwoHandedAttackSpeedBoostAbility2 => ModKey.MakeFormKey(0x6f71);
+            public static FormLink<ISpellGetter> ASX_TwoHandedAttackSpeedBoostAbility3 => ModKey.MakeFormKey(0x6f73);
+            public static FormLink<ISpellGetter> ASX_TwoHandedAttackSpeedBoostAbility4 => ModKey.MakeFormKey(0x6f75);
+
+            public static FormLink<ISpellGetter> ASX_LightArmorStaminaRateMultBoost => ModKey.MakeFormKey(0x28cc);
+            public static FormLink<ISpellGetter> ASX_HeavyArmorStaminaRateMultBoost => ModKey.MakeFormKey(0x33a9);
+
+
+            public static readonly List<FormLink<ISpellGetter>> ArcheryBoosts = new() { ASX_ArcheryAttackSpeedBoostAbility1, ASX_ArcheryAttackSpeedBoostAbility2, ASX_ArcheryAttackSpeedBoostAbility3, ASX_ArcheryAttackSpeedBoostAbility4 };
+            public static readonly List<FormLink<ISpellGetter>> OneHandedBoosts = new() { ASX_OneHandedAttackSpeedBoostAbility1, ASX_OneHandedAttackSpeedBoostAbility2, ASX_OneHandedAttackSpeedBoostAbility3, ASX_OneHandedAttackSpeedBoostAbility4 };
+            public static readonly List<FormLink<ISpellGetter>> TwoHandedBoosts = new() { ASX_TwoHandedAttackSpeedBoostAbility1, ASX_TwoHandedAttackSpeedBoostAbility2, ASX_TwoHandedAttackSpeedBoostAbility3, ASX_TwoHandedAttackSpeedBoostAbility4 };
+
+
+
+
+
             /**************************************************************Medium****************************************************/
             /*
             public static FormLink<ISpellGetter> ASX_MediumArmorBootsAttackSpeedPenaltyAbility1         => ModKey.MakeFormKey(0xc0b7);
@@ -634,28 +689,6 @@ namespace ActionSpeedX
             }
         }
 
-        /// <summary>
-        /// 
-        /// This contains the 5 spell components that are attached to armors excluding shields.
-        /// </summary>
-        public class ArmorActionSpells
-        {
-            public FormLink<ISpellGetter> AttackSpell;
-            public FormLink<ISpellGetter>? RangedAttackSpell;
-            public FormLink<ISpellGetter> SpeedSpell;
-            public FormLink<ISpellGetter> MagickaSpell;
-            public FormLink<ISpellGetter> StaminaSpell;
-
-            public ArmorActionSpells(FormLink<ISpellGetter> attack, FormLink<ISpellGetter>? rangedAttack, FormLink<ISpellGetter> speed, FormLink<ISpellGetter> magicka, FormLink<ISpellGetter> stamina)
-            {
-                this.AttackSpell       = attack;
-                this.RangedAttackSpell = rangedAttack;
-                this.SpeedSpell        = speed;
-                this.MagickaSpell      = magicka;
-                this.StaminaSpell      = stamina;
-            }
-
-
-        }
+        
     }
 }

@@ -8,15 +8,11 @@ namespace ActionSpeedX
 {
     public static partial class FormKeys
     {
-        const string LIGHT_STAMINA = " Levels in Light Armor will increase stamina regeneration by up to 10%.";
-
-
         const string ALTERATION_DESC  = " Levels in alteration will increase magicka regeneration by up to 5%.";
         const string CONJURATION_DESC = " Levels in conjuration will increase magicka regeneration by up to 5%.";
         const string DESTRUCTION_DESC = " Levels in destruction will increase magicka regeneration by up to 5%.";
         const string ILLUSION_DESC    = " Levels in illusion will increase magicka regeneration by up to 5%.";
         const string RESTORATION_DESC = " Levels in restoration will increase magicka regeneration by up to 5%.";
-
 
         const string LIGHT_STAMINA_DESC = " Levels in Light Armor will increase stamina regeneration by up to 10%.";
         const string HEAVY_STAMINA_DESC = " Levels in Heavy Armor will increase stamina regeneration by up to 20%.";
@@ -218,9 +214,9 @@ namespace ActionSpeedX
             public static readonly Dictionary<string, FormLink<IPerkGetter>> FactionPerks = new() {
                 {"CWImperialFaction", ASX_ImperialSoldierFactionProficiencyPerk },
                 {"CWSonsFaction", ASX_StormcloakFactionProficiencyPerk },
-                //{"DraugrFaction", ASX_DraugrFactionProficiencyPerk },
-              //  {"DremoraFaction", ASX_DremoraFactionProficiencyPerk },
-             //   {"FalmerFaction", ASX_FalmerFactionProficiencyPerk },
+                {"DraugrFaction", ASX_DraugrFactionProficiencyPerk },
+                {"DremoraFaction", ASX_DremoraFactionProficiencyPerk },
+                {"FalmerFaction", ASX_FalmerFactionProficiencyPerk },
                 {"ForswornFaction", ASX_ForswornFactionProficiencyPerk },
                 {"IsGuardFaction", ASX_GuardsFactionProficiencyPerk },
                 {"DLC1HunterFaction", ASX_DawnguardFactionProficiencyPerk },
@@ -249,28 +245,41 @@ namespace ActionSpeedX
         }
 
         /// <summary>
-        /// This contains a perk records form id, ability(spell) to append, and description update(if any)
+        /// This contains a perk records form id, abilities(spells) to append, and description update(if any)
         ///
         /// </summary>
         public class PerkModifier
         {
-            public FormLink<ISpellGetter> SpellForm; // Ability id
+            public List<FormLink<ISpellGetter>> SpellForms; // Ability id
             public FormLink<IPerkGetter> PerkForm; // Perk id
             public string Description; // Appends text to Perk
 
-            public PerkModifier(FormLink<IPerkGetter> perkForm, FormLink<ISpellGetter> spellForm, string dsecription)
+            public PerkModifier(FormLink<IPerkGetter> perkForm, List<FormLink<ISpellGetter>> spellForms, string dsecription)
             {
-                this.SpellForm   = spellForm;
+                this.SpellForms  = spellForms;
                 this.PerkForm    = perkForm;
                 this.Description = dsecription;
             }
         }
 
-        public static class AdamantPerks
+        public abstract class PerkModifiers
+        {
+            public List<PerkModifier>? StaminaPerks;
+            public List<PerkModifier>? MagickaPerks;
+            public List<PerkModifier>? SpeedPerks;
+            public List<PerkModifier>? AttackSpeedPerks;
+            public List<PerkModifier>? RangedPerks;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public  class AdamantPerks : PerkModifiers
         {
             //private static readonly ModKey ModKey = ModKey.FromNameAndExtension("Adamant.esp");
 
             // Power attacks
+            /*
             private static FormLink<IPerkGetter> MAG_Philosopher00  => Skyrim.Perk.AlterationNovice00;
             private static FormLink<IPerkGetter> MAG_Summoner00     => Skyrim.Perk.ConjurationNovice00;
             private static FormLink<IPerkGetter> MAG_Elementalist00 => Skyrim.Perk.DestructionNovice00;
@@ -282,26 +291,36 @@ namespace ActionSpeedX
             private static FormLink<IPerkGetter> MAG_Scout00 => Skyrim.Perk.AgileDefender00;
             private static FormLink<IPerkGetter> MAG_Skirmisher00 => Skyrim.Perk.Armsman00;
             private static FormLink<IPerkGetter> MAG_Barbarian00 => Skyrim.Perk.Barbarian00;
+            */
+            public AdamantPerks()
+            {
+                this.StaminaPerks = new() {
+                   new PerkModifier( Skyrim.Perk.Juggernaut00, new List<FormLink<ISpellGetter>>() { FormKeys.ActionSpeedXSpells.ASX_HeavyArmorStaminaRateMultBoost }, HEAVY_STAMINA_DESC),
+                   new PerkModifier(Skyrim.Perk.AgileDefender00, new List<FormLink<ISpellGetter>>() { FormKeys.ActionSpeedXSpells.ASX_LightArmorStaminaRateMultBoost }, LIGHT_STAMINA_DESC)
+                };
+                this.MagickaPerks = new()
+                {
+                    new PerkModifier(Skyrim.Perk.AlterationNovice00, new List<FormLink<ISpellGetter>>() { FormKeys.ActionSpeedXSpells.ASX_AlterationMagickaRegenAbility }, ALTERATION_DESC),
+                    new PerkModifier(Skyrim.Perk.ConjurationNovice00, new List<FormLink<ISpellGetter>>() { FormKeys.ActionSpeedXSpells.ASX_ConjurationMagickaRegenAbility }, CONJURATION_DESC),
+                    new PerkModifier(Skyrim.Perk.DestructionNovice00, new List<FormLink<ISpellGetter>>() { FormKeys.ActionSpeedXSpells.ASX_DestructionMagickaRegenAbility }, DESTRUCTION_DESC),
+                    new PerkModifier(Skyrim.Perk.IllusionNovice00, new List<FormLink<ISpellGetter>>() { FormKeys.ActionSpeedXSpells.ASX_IllusionMagickaRegenAbility }, ILLUSION_DESC),
+                    new PerkModifier(Skyrim.Perk.RestorationNovice00, new List<FormLink<ISpellGetter>>() { FormKeys.ActionSpeedXSpells.ASX_RestorationMagickaRegenAbility }, RESTORATION_DESC),
+                };
+                this.SpeedPerks = new() { };
+                this.AttackSpeedPerks = new() {
+                    new PerkModifier(Skyrim.Perk.Armsman00, FormKeys.ActionSpeedXSpells.OneHandedBoosts, ONE_HANDED_DESC),
+                    new PerkModifier(Skyrim.Perk.Barbarian00, FormKeys.ActionSpeedXSpells.TwoHandedBoosts, TWO_HANDED_DESC)
+                };
+                this.RangedPerks = new() {
+                    new PerkModifier(Skyrim.Perk.Overdraw00, FormKeys.ActionSpeedXSpells.ArcheryBoosts, ARCHERY_DESC),
+                };
 
-            /*
-             * MAG_Philosopher00 Alteration
-			 MAG_Summoner00 Conjur
-			 MAG_Elementalist00 Destruction
-			 MAG_Illusionist00
-			 MAG_Healer00
-			 
-			 
-			 MAG_Juggernaut00 heavy-armor
-			 MAG_Scout00 light-armor
-			 
-			 MAG_Skirmisher00 one-handed
-			 MAG_Barbarian00 two-handed
-			
-			
-			MAG_Marksman00 Archery
-             */
+            }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public static class OrdinatorPerks
         {
             private static readonly ModKey ModKey = ModKey.FromNameAndExtension("Ordinator - Perks of Skyrim.esp");
@@ -334,11 +353,12 @@ namespace ActionSpeedX
              */
         }
 
-        public static class VokriiPerks
+        public class VokriiPerks : PerkModifiers
         {
             //private static readonly ModKey ModKey = ModKey.FromNameAndExtension("Vokrii - Minimalistic Perks of Skyrim.esp");
+            // Adamant and Vokrii are the same
 
-            // Power attacks
+            /*
             private static FormLink<IPerkGetter> VKR_Alt_000_AlterationMastery_Perk_WasAlteration1    => Skyrim.Perk.AlterationNovice00;
             private static FormLink<IPerkGetter> VKR_Con_000_ConjurationMastery_Perk_WasConjuration1  => Skyrim.Perk.ConjurationNovice00;
             private static FormLink<IPerkGetter> VKR_Des_000_DestructionMastery_Perk_WasDestruction1  => Skyrim.Perk.DestructionNovice00;
@@ -349,24 +369,35 @@ namespace ActionSpeedX
             private static FormLink<IPerkGetter> VKR_Lia_000_LightArmorMastery_Perk_WasAgileDefender1 => Skyrim.Perk.AgileDefender00;
             private static FormLink<IPerkGetter> VKR_One_000_OneHandedMastery_Perk_WasArmsman1        => Skyrim.Perk.Armsman00;
             private static FormLink<IPerkGetter> VKR_Two_000_TwoHandedMastery_Perk_WasBarbarian1      => Skyrim.Perk.Barbarian00;
+            */
 
+            public VokriiPerks()
+            {
+                this.StaminaPerks = new()
+                {
+                    new PerkModifier(Skyrim.Perk.Juggernaut00, new List<FormLink<ISpellGetter>>() { FormKeys.ActionSpeedXSpells.ASX_HeavyArmorStaminaRateMultBoost }, HEAVY_STAMINA_DESC),
+                    new PerkModifier(Skyrim.Perk.AgileDefender00, new List<FormLink<ISpellGetter>>() { FormKeys.ActionSpeedXSpells.ASX_LightArmorStaminaRateMultBoost }, LIGHT_STAMINA_DESC)
+                };
+                this.MagickaPerks = new()
+                {
+                    new PerkModifier(Skyrim.Perk.AlterationNovice00, new List<FormLink<ISpellGetter>>() { FormKeys.ActionSpeedXSpells.ASX_AlterationMagickaRegenAbility }, ALTERATION_DESC),
+                    new PerkModifier(Skyrim.Perk.ConjurationNovice00, new List<FormLink<ISpellGetter>>() { FormKeys.ActionSpeedXSpells.ASX_ConjurationMagickaRegenAbility }, CONJURATION_DESC),
+                    new PerkModifier(Skyrim.Perk.DestructionNovice00, new List<FormLink<ISpellGetter>>() { FormKeys.ActionSpeedXSpells.ASX_DestructionMagickaRegenAbility }, DESTRUCTION_DESC),
+                    new PerkModifier(Skyrim.Perk.IllusionNovice00, new List<FormLink<ISpellGetter>>() { FormKeys.ActionSpeedXSpells.ASX_IllusionMagickaRegenAbility }, ILLUSION_DESC),
+                    new PerkModifier(Skyrim.Perk.RestorationNovice00, new List<FormLink<ISpellGetter>>() { FormKeys.ActionSpeedXSpells.ASX_RestorationMagickaRegenAbility }, RESTORATION_DESC),
+                };
+                this.SpeedPerks = new() { };
+                this.AttackSpeedPerks = new()
+                {
+                    new PerkModifier(Skyrim.Perk.Armsman00, FormKeys.ActionSpeedXSpells.OneHandedBoosts, ONE_HANDED_DESC),
+                    new PerkModifier(Skyrim.Perk.Barbarian00, FormKeys.ActionSpeedXSpells.TwoHandedBoosts, TWO_HANDED_DESC)
+                };
+                this.RangedPerks = new()
+                {
+                    new PerkModifier(Skyrim.Perk.Overdraw00, FormKeys.ActionSpeedXSpells.ArcheryBoosts, ARCHERY_DESC),
+                };
 
-
-
-
-
-
-            /*
-             * (VKR_Alt_000_AlterationMastery_Perk_WasAlteration1, 
-			 VKR_Con_000_ConjurationMastery_Perk_WasConjuration1, 
-			 VKR_Des_000_DestructionMastery_Perk_WasDestruction1, 
-			 VKR_Ill_000_IllusionMastery_Perk_WasIllusion1, 
-			 VKR_Res_000_RestorationMastery_Perk_WasRestoration1
-			 VKR_Arc_000_ArcheryMastery_Perk_WasOverdraw1, 
-			 VKR_Hea_000_HeavyArmorMastery_Perk_WasJuggernaut1
-			 VKR_Lia_000_LightArmorMastery_Perk_WasAgileDefender1
-			 VKR_One_000_OneHandedMastery_Perk_WasArmsman1
-             */
+            }
         }
     }
 }
