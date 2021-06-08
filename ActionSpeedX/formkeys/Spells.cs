@@ -412,6 +412,9 @@ namespace ActionSpeedX
             public static FormLink<ISpellGetter> ASX_LightArmorStaminaRateMultBoost => ModKey.MakeFormKey(0x28cc);
             public static FormLink<ISpellGetter> ASX_HeavyArmorStaminaRateMultBoost => ModKey.MakeFormKey(0x33a9);
 
+            public static FormLink<ISpellGetter> ASX_LightArmorMoveSpeedBoostSplitAbility => ModKey.MakeFormKey(0xD82B);
+            public static FormLink<ISpellGetter> ASX_HeavyArmorMoveSpeedBoostNewAbility => ModKey.MakeFormKey(0xD82C);
+
 
             public static readonly List<FormLink<ISpellGetter>> ArcheryBoosts = new() { ASX_ArcheryAttackSpeedBoostAbility1, ASX_ArcheryAttackSpeedBoostAbility2, ASX_ArcheryAttackSpeedBoostAbility3, ASX_ArcheryAttackSpeedBoostAbility4 };
             public static readonly List<FormLink<ISpellGetter>> OneHandedBoosts = new() { ASX_OneHandedAttackSpeedBoostAbility1, ASX_OneHandedAttackSpeedBoostAbility2, ASX_OneHandedAttackSpeedBoostAbility3, ASX_OneHandedAttackSpeedBoostAbility4 };

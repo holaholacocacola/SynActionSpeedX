@@ -36,9 +36,9 @@ namespace ActionSpeedX
             //if (this.settings.MagickaRegen) perksToAdd.AddRange(ActionSpeedX.FormKeys.Perks.MagickaRegen);
             //if (this.settings.MoveSpeed) perksToAdd.AddRange(ActionSpeedX.FormKeys.Perks.MoveSpeed);
             //if (this.settings.RangedAttack) perksToAdd.AddRange(ActionSpeedX.FormKeys.Perks.RangedSpeed);
-            if (this.settings.PowerAttacks) perksToAdd.AddRange(ActionSpeedX.FormKeys.Perks.PowerAttacks);
+            if (this.settings.PowerAttacks) perksToAdd.AddRange(FormKeys.ActionSpeedXPerks.PowerAttacks);
             //if (this.settings.StaminaRegen) perksToAdd.AddRange(ActionSpeedX.FormKeys.Perks.StaminaRegen);
-            if (this.settings.SpellCosts) perksToAdd.AddRange(ActionSpeedX.FormKeys.Perks.SpellCosts);
+            if (this.settings.SpellCosts) perksToAdd.AddRange(FormKeys.ActionSpeedXPerks.SpellCosts);
         }
 
         private HashSet<string> LoadRaces()
@@ -85,14 +85,14 @@ namespace ActionSpeedX
                     if (npc.EditorID == "Player" && this.settings.Racials)
                     {
                         // a quest runs after racemenu that will sift and apply the correct racial perk. This perk is removed after.
-                        PerkPlacement p = new PerkPlacement { Rank = 1, Perk = FormKeys.Perks.ASX_DummyPerk.FormKey.AsLink<IPerkGetter>() };
+                        PerkPlacement p = new PerkPlacement { Rank = 1, Perk = FormKeys.ActionSpeedXPerks.ASX_DummyPerk.FormKey.AsLink<IPerkGetter>() };
                         npcCopy.Perks.Add(p);
                         continue;
                     }
 
-                    if (this.settings.Racials && ActionSpeedX.FormKeys.Perks.RacialPerks.ContainsKey(race.EditorID))
+                    if (this.settings.Racials && ActionSpeedX.FormKeys.ActionSpeedXPerks.RacialPerks.ContainsKey(race.EditorID))
                     {
-                        PerkPlacement p = new PerkPlacement { Rank = 1, Perk = FormKeys.Perks.RacialPerks[race.EditorID].FormKey.AsLink<IPerkGetter>() };
+                        PerkPlacement p = new PerkPlacement { Rank = 1, Perk = FormKeys.ActionSpeedXPerks.RacialPerks[race.EditorID].FormKey.AsLink<IPerkGetter>() };
                         npcCopy.Perks.Add(p);
                     }
 
@@ -100,9 +100,9 @@ namespace ActionSpeedX
                     {
                         foreach (var faction in npc.Factions)
                         {
-                            if (faction.Faction.TryResolve(this.state.LinkCache, out var wtf) && wtf.EditorID != null && ActionSpeedX.FormKeys.Perks.FactionPerks.ContainsKey(wtf.EditorID))
+                            if (faction.Faction.TryResolve(this.state.LinkCache, out var wtf) && wtf.EditorID != null && ActionSpeedX.FormKeys.ActionSpeedXPerks.FactionPerks.ContainsKey(wtf.EditorID))
                             {
-                                PerkPlacement p = new PerkPlacement { Rank = 1, Perk = FormKeys.Perks.FactionPerks[wtf.EditorID].FormKey.AsLink<IPerkGetter>() };
+                                PerkPlacement p = new PerkPlacement { Rank = 1, Perk = FormKeys.ActionSpeedXPerks.FactionPerks[wtf.EditorID].FormKey.AsLink<IPerkGetter>() };
                                 npcCopy.Perks.Add(p);
                             }
                         }

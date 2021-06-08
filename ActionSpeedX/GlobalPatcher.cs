@@ -1,15 +1,9 @@
-using Mutagen.Bethesda;
-using Mutagen.Bethesda.FormKeys.SkyrimSE;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Synthesis;
-using Newtonsoft.Json.Linq;
 using Noggog;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+
 
 namespace ActionSpeedX
 {
