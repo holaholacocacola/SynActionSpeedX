@@ -31,47 +31,49 @@ namespace ActionSpeedX
         {
             if (this._state.LoadOrder.ContainsKey(Ordinator))
             {
-                Console.WriteLine("Patching Ordinator Perks");
                 PatchIt(FormKeys.OrdinatorPerks);
             }
             else
             { // Adamant and Vokrii use the same perks as vanilla.
-                Console.WriteLine("Patching Perks");
                 PatchIt(FormKeys.VanillaPerks);
             }
             
         
         }
 
-        private void UpdateDescriptionAndAbilities(List<FormKeys.PerkModifier> perksToUpdate)
+        private void UpdatePerkDescriptionAndAbilities(List<FormKeys.PerkModifier> perksToUpdate)
         {
             foreach(var perkModifier in perksToUpdate)
             {
-                if(!this._state.LinkCache.TryResolve<IPerkGetter>(perkModifier.PerkForm.FormKey, out var perkUpdate) && perkUpdate != null)
+                if(this._state.LinkCache.TryResolve<IPerkGetter>(perkModifier.PerkForm.FormKey, out var perkUpdate))
                 {
-                    var modifiedPerk = perkUpdate.DeepCopy();
+                    var modifiedPerk =  perkUpdate.DeepCopy();
                     modifiedPerk.Description += perkModifier.Description;
                     foreach(var spellModifier in perkModifier.SpellForms)
                     {
-                        if (!this._state.LinkCache.TryResolve<ISpellGetter>(spellModifier.FormKey, out var spellUpdate) && spellUpdate != null)
+                        if (this._state.LinkCache.TryResolve<ISpellGetter>(spellModifier.FormKey, out var spellUpdate))
                         {
                             PerkAbilityEffect newAb = new();
                             newAb.Ability.SetTo(spellUpdate.FormKey);
                             modifiedPerk.Effects.Add(newAb);
                         }
                     }
-                    this._state.PatchMod.Perks.Add(modifiedPerk);
-                }   
+                    this._state.PatchMod.Perks.Set(modifiedPerk);
+                }
+                else
+                {
+                    throw new Exception("Could not resolve formkey for.");
+                }
             }
         }
 
         private void PatchIt(FormKeys.PerkModifiers modifyMe)
         {
-            if (this._settings.StaminaRegen) UpdateDescriptionAndAbilities(modifyMe.StaminaPerks);
-            if (this._settings.MagickaRegen) UpdateDescriptionAndAbilities(modifyMe.MagickaPerks);
-            if (this._settings.MoveSpeed) UpdateDescriptionAndAbilities(modifyMe.SpeedPerks);
-            if (this._settings.AttackSpeed) UpdateDescriptionAndAbilities(modifyMe.AttackSpeedPerks);
-            if (this._settings.RangedAttack) UpdateDescriptionAndAbilities(modifyMe.RangedPerks);
+            if (this._settings.StaminaRegen) UpdatePerkDescriptionAndAbilities(modifyMe.StaminaPerks);
+            if (this._settings.MagickaRegen) UpdatePerkDescriptionAndAbilities(modifyMe.MagickaPerks);
+            if (this._settings.MoveSpeed) UpdatePerkDescriptionAndAbilities(modifyMe.SpeedPerks);
+            if (this._settings.AttackSpeed) UpdatePerkDescriptionAndAbilities(modifyMe.AttackSpeedPerks);
+            if (this._settings.RangedAttack) UpdatePerkDescriptionAndAbilities(modifyMe.RangedPerks);
         }
     }
 }

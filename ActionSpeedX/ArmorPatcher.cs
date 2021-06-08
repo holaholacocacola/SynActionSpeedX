@@ -107,13 +107,13 @@ namespace ActionSpeedX
                     ActionSpeedX.FormKeys.ArmorActionSpells spellsToAdd;
                     if (armor.BodyTemplate.ArmorType == ArmorType.LightArmor)
                     {
-                        armorKeysMap = ActionSpeedX.FormKeys.Keywords.LightArmorKeywordCollection;
+                        armorKeysMap = FormKeys.Keywords.LightArmorKeywordCollection;
                         armorType = LIGHT;
 
                     }
                     else
                     {
-                        armorKeysMap = ActionSpeedX.FormKeys.Keywords.HeavyArmorKeywordCollection;
+                        armorKeysMap = FormKeys.Keywords.HeavyArmorKeywordCollection;
                         armorType = HEAVY;
                     }
 

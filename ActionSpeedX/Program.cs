@@ -49,7 +49,13 @@ namespace ActionSpeedX
             Console.WriteLine("[{0}]", string.Join(", ", foundFiles));
             
             if (! requiredFiles.All(value => foundFiles.Contains(value)))
-                throw new Exception("Missing one of the following json files in the Data folder: armor_descriptions, armor_materials, races"); 
+                throw new Exception("Missing one of the following json files in the Data folder: armor_descriptions, armor_materials, races");
+
+            // Perk Patcher. Appends Descriptions and Adds Passives
+
+            Console.WriteLine("Patching Perks");
+            PerkPatcher perkPatcher = new(state, Settings);
+            perkPatcher.PatchPerks();
 
             // Spell Patcher. Modifies magnitudes.
             if (Settings.BalancePerkMods)
@@ -58,17 +64,17 @@ namespace ActionSpeedX
                 if(!spellPatcher.PatchSpells()) throw new Exception("Error encountered while balancing perks. Check logs.");
             }
 
-            // Global Patcher. Sets Effects Flags
-            Console.WriteLine("Patchint Settings");
+            // Global Patcher. Sets Flags for loadscreens and which spells get added onequippedforms.
+            Console.WriteLine("Patching Settings");
             GlobalPatcher globalPatcher = new GlobalPatcher(state, Settings);
             globalPatcher.PatchGlobals();
 
-            // Armor Patcher. Adds keywords
+            // Armor Patcher. Adds keywords that effects work off.
             Console.WriteLine("Patching armors");
             ActionSpeedX.ArmorPatcher armorPatcher = new ArmorPatcher(state, Settings);
             armorPatcher.PatchArmors();
 
-            // Npc patcher. AddsPerks
+            // Npc patcher. AddsPerks. Only adds Power Attack and Novice Perks if the npc has an applicable class for it.
             Console.WriteLine("Patching npcs");
             ActionSpeedX.NpcPatcher npcPatcher = new NpcPatcher(state, Settings);
             npcPatcher.PatchNpcs();

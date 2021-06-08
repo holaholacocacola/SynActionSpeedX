@@ -15,8 +15,8 @@ namespace ActionSpeedX
         static ModKey Ordinator = ModKey.FromNameAndExtension("Ordinator - Perks Of Skyrim.esp");
         
         private readonly IPatcherState<ISkyrimMod, ISkyrimModGetter> state;
-        private readonly ActionSpeedX.Settings settings; // in memory rep of settings.json
-        public SpellPatcher(IPatcherState<ISkyrimMod, ISkyrimModGetter> state, ActionSpeedX.Settings settings)
+        private readonly Settings settings; // in memory rep of settings.json
+        public SpellPatcher(IPatcherState<ISkyrimMod, ISkyrimModGetter> state, Settings settings)
         {
             this.state = state;
             this.settings = settings;
@@ -31,27 +31,27 @@ namespace ActionSpeedX
             if (state.LoadOrder.ContainsKey(Adamant))
             {
                 Console.WriteLine("Adamant will be patched.");
-                success = RebalancePerks(ActionSpeedX.FormKeys.AdamantSpells.StaminaSpells, ActionSpeedX.FormKeys.AdamantSpells.MoveSpells);
+                success = RebalancePerks(FormKeys.AdamantSpells.StaminaSpells, FormKeys.AdamantSpells.MoveSpells);
                 if (!success) Console.WriteLine("Failed to patch adamant");
             }
 
             if (state.LoadOrder.ContainsKey(Ordinator))
             {
                 Console.WriteLine("Ordinator will be patched.");
-                success = RebalancePerks(ActionSpeedX.FormKeys.OrdinatorSpells.StaminaSpells, ActionSpeedX.FormKeys.OrdinatorSpells.MoveSpells);
+                success = RebalancePerks(FormKeys.OrdinatorSpells.StaminaSpells, FormKeys.OrdinatorSpells.MoveSpells);
                 if (!success) Console.WriteLine("Failed to patch ordinator");
             }
 
             if (state.LoadOrder.ContainsKey(Vokrii))
             {
                 Console.WriteLine("Vokrii will be patched.");
-                success = RebalancePerks(ActionSpeedX.FormKeys.VokriiSpells.StaminaSpells, ActionSpeedX.FormKeys.VokriiSpells.MoveSpells);
+                success = RebalancePerks(FormKeys.VokriiSpells.StaminaSpells, FormKeys.VokriiSpells.MoveSpells);
                 if (!success) Console.WriteLine("Failed to patch vokrii");
             }
             return success;
         }
 
-        private bool RebalancePerks(List<ActionSpeedX.FormKeys.SpellEffectModifier> staminaSpells, List<ActionSpeedX.FormKeys.SpellEffectModifier> speedSpells)
+        private bool RebalancePerks(List<FormKeys.SpellEffectModifier> staminaSpells, List<FormKeys.SpellEffectModifier> speedSpells)
         {
             bool hasError = false;
             if (this.settings.StaminaRegen)
@@ -73,7 +73,7 @@ namespace ActionSpeedX
             return !hasError;
         }
 
-        private bool AdjustEffect(ActionSpeedX.FormKeys.SpellEffectModifier spellToModify)
+        private bool AdjustEffect(FormKeys.SpellEffectModifier spellToModify)
         {
             if (!this.state.LinkCache.TryResolve<ISpellGetter>(spellToModify.SpellForm.FormKey, out var spell))
             {
