@@ -15,5 +15,9 @@ namespace ActionSpeedX
         public bool Factions { get; set; } = true;
         public bool BalancePerkMods { get; set; } = true;
         public bool CuirassOnly { get; set; } = false;
+
+        private bool PatchOrdinator { get; set; } = false;
+        private bool PatchVokrii { get; set; } = false;
+        private bool PatchAdamant { get; set; } = false;
     }
 }

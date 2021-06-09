@@ -374,6 +374,101 @@ namespace ActionSpeedX
                 new PerkModifier(ORD_Arc00_ArcheryMastery_Perk_00, FormKeys.ActionSpeedXSpells.ArcheryBoosts, ARCHERY_DESC),
             }
         };
-       
+
+
+        public struct PerkWeight
+        {
+
+        }
+
+        public struct PerkBlah
+        {
+            public Dictionary<Skill, FormLink<IPerkGetter>> StaminaSkillPerks;
+            public Dictionary<Skill, FormLink<IPerkGetter>> MagickaSkillPerks;
+            public Dictionary<Skill, FormLink<IPerkGetter>> SpeedSkillPerks;
+            public Dictionary<Skill, FormLink<IPerkGetter>> AttackSpeedSkillPerks;
+            public Dictionary<Skill, FormLink<IPerkGetter>> RangedAttackSkillPerks;
+        }
+
+
+        public static readonly PerkBlah vanillaPerkBlah = new()
+        {
+            StaminaSkillPerks = new()
+            {
+                { Skill.LightArmor, Skyrim.Perk.AgileDefender00 },
+                { Skill.HeavyArmor, Skyrim.Perk.Juggernaut00 }
+            },
+            MagickaSkillPerks = new()
+            {
+
+                { Skill.Alteration, Skyrim.Perk.AlterationNovice00 },
+                { Skill.Conjuration, Skyrim.Perk.ConjurationNovice00 },
+                { Skill.Destruction, Skyrim.Perk.DestructionNovice00 },
+                { Skill.Illusion, Skyrim.Perk.IllusionNovice00 },
+                { Skill.Restoration, Skyrim.Perk.RestorationNovice00 },
+            },
+            SpeedSkillPerks = new()
+            {
+                { Skill.LightArmor, Skyrim.Perk.AgileDefender00 },
+                { Skill.HeavyArmor, Skyrim.Perk.Juggernaut00 }
+            },
+            AttackSpeedSkillPerks = new()
+            {
+                { Skill.OneHanded, Skyrim.Perk.Armsman00 },
+                { Skill.TwoHanded, Skyrim.Perk.Barbarian00 },
+            },
+            RangedAttackSkillPerks = new()
+            {
+                { Skill.Archery, Skyrim.Perk.Overdraw00 }
+            }
+        };
+
+        public static readonly PerkBlah OrdinatorPerkBlah = new()
+        {
+            StaminaSkillPerks = new()
+            {
+                { Skill.LightArmor, ORD_Lia00_LightArmorMastery_Perk_00 },
+                { Skill.HeavyArmor, ORD_Hea00_HeavyArmorMastery_Perk_00 }
+            },
+            MagickaSkillPerks = new()
+            {
+
+                { Skill.Alteration, ORD_Alt00_AlterationMastery_Perk_00 },
+                { Skill.Conjuration, ORD_Con00_ConjurationMastery_Perk_00 },
+                { Skill.Destruction, ORD_Des00_DestructionMastery_Perk_00 },
+                { Skill.Illusion, ORD_Ill00_IllusionMastery_Perk_00 },
+                { Skill.Restoration, ORD_Res00_RestorationMastery_Perk_00 },
+            },
+            SpeedSkillPerks = new()
+            {
+                { Skill.LightArmor, ORD_Lia00_LightArmorMastery_Perk_00 },
+                { Skill.HeavyArmor, ORD_Hea00_HeavyArmorMastery_Perk_00 }
+            },
+            AttackSpeedSkillPerks = new()
+            {
+                { Skill.OneHanded, ORD_One00_OneHandedMastery_Perk_00 },
+                { Skill.TwoHanded, ORD_Two00_TwoHandedMastery_Perk_00 },
+            },
+            RangedAttackSkillPerks = new()
+            {
+                { Skill.Archery, ORD_Arc00_ArcheryMastery_Perk_00 }
+            }
+        };
+
+        /*
+        public static readonly Dictionary<Skill, FormLink<IPerkGetter>> Perkweights = new()
+        {
+            {Skill.Alteration, Skyrim.Perk.AlterationNovice00 },
+            {Skill.Conjuration, Skyrim.Perk.ConjurationNovice00 },
+            {Skill.Destruction, Skyrim.Perk.DestructionNovice00 },
+            {Skill.Illusion, Skyrim.Perk.IllusionNovice00},
+            {Skill.Restoration, Skyrim.Perk.RestorationNovice00},
+            { Skill.OneHanded, Skyrim.Perk.Armsman00},
+            {Skill.TwoHanded, Skyrim.Perk.Barbarian00 },
+            {Skill.LightArmor, Skyrim.Perk.AgileDefender00 },
+            {Skill.HeavyArmor, Skyrim.Perk.Juggernaut00 },
+            {Skill.Archery, Skyrim.Perk.Overdraw00}
+        };*/
+
     }
 }

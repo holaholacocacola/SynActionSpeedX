@@ -23,6 +23,7 @@ namespace ActionSpeedX
         private readonly HashSet<string> _validRaces; // contains valid races to add perks too.
         
         private readonly List<FormLink<IPerkGetter>> _perksToDistribute; // Contains form ids of perks to add to every npc.
+        private readonly FormKeys.PerkBlah _perkBlah;
 
         public NpcPatcher(IPatcherState<ISkyrimMod, ISkyrimModGetter> state, ActionSpeedX.Settings settings)
         {
@@ -30,6 +31,7 @@ namespace ActionSpeedX
             this._settings            = settings;
             this._validRaces          = LoadRaces();
             this._perksToDistribute   = new();
+            this._perkBlah            =        FormKeys.vanillaPerkBlah;
 
             /* ASX-Perf-Refactor. Spells are added on equip. We only need to attach Power Attack and spell cost perks as those use perk entry points.
             if (this.settings.AttackSpeed) perksToAdd.AddRange(ActionSpeedX.FormKeys.Perks.AttackSpeed);
@@ -86,13 +88,13 @@ namespace ActionSpeedX
 
                     if (npc.EditorID == "Player" && this._settings.Racials)
                     {
-                        // a quest runs after racemenu that will sift and apply the correct racial perk. This perk is removed after. Hopefull
+                        // a quest runs after racemenu that will sift and apply the correct racial perk. This perk is removed after. 
                         PerkPlacement p = new PerkPlacement { Rank = 1, Perk = FormKeys.ActionSpeedXPerks.ASX_DummyPerk.FormKey.AsLink<IPerkGetter>() };
                         npcCopy.Perks.Add(p);
                         continue;
                     }
 
-                    if (this._settings.Racials && ActionSpeedX.FormKeys.ActionSpeedXPerks.RacialPerks.ContainsKey(race.EditorID))
+                    if (this._settings.Racials && FormKeys.ActionSpeedXPerks.RacialPerks.ContainsKey(race.EditorID))
                     {
                         PerkPlacement p = new PerkPlacement { Rank = 1, Perk = FormKeys.ActionSpeedXPerks.RacialPerks[race.EditorID].FormKey.AsLink<IPerkGetter>() };
                         npcCopy.Perks.Add(p);
@@ -102,16 +104,45 @@ namespace ActionSpeedX
                     {
                         foreach (var faction in npc.Factions)
                         {
-                            if (faction.Faction.TryResolve(this._state.LinkCache, out var wtf) && wtf.EditorID != null && ActionSpeedX.FormKeys.ActionSpeedXPerks.FactionPerks.ContainsKey(wtf.EditorID))
+                            if (faction.Faction.TryResolve(this._state.LinkCache, out var wtf) && wtf.EditorID != null && FormKeys.ActionSpeedXPerks.FactionPerks.ContainsKey(wtf.EditorID))
                             {
                                 PerkPlacement p = new PerkPlacement { Rank = 1, Perk = FormKeys.ActionSpeedXPerks.FactionPerks[wtf.EditorID].FormKey.AsLink<IPerkGetter>() };
                                 npcCopy.Perks.Add(p);
+                                
                             }
                         }
                     }
+
+                    //check skill weights. This will distribute passive perks to npcs that can actually make use of them. Map of skillweights -> perk
+                    if (npc.Class != null && npc.Class.TryResolve(this._state.LinkCache, out var npcClass))
+                    {
+                        if (this._settings.StaminaRegen) DistributeClassPerks(npcCopy, this._perkBlah.StaminaSkillPerks, npcClass);
+                        if (this._settings.MagickaRegen) DistributeClassPerks(npcCopy, this._perkBlah.MagickaSkillPerks, npcClass);
+                        if (this._settings.MoveSpeed)    DistributeClassPerks(npcCopy, this._perkBlah.SpeedSkillPerks, npcClass);
+                        if (this._settings.AttackSpeed)  DistributeClassPerks(npcCopy, this._perkBlah.AttackSpeedSkillPerks, npcClass);
+                        if (this._settings.RangedAttack) DistributeClassPerks(npcCopy, this._perkBlah.RangedAttackSkillPerks, npcClass);
+
+                    }
+
                 } catch (Exception e) 
                 {
                     throw RecordException.Create("Error processing npc record", npc, e);
+                }
+            }
+
+            //add player check here
+
+        }
+
+        private void DistributeClassPerks(Npc npcCopy, Dictionary<Skill, FormLink<IPerkGetter>> perksToAdd, IClassGetter npcClass)
+        {
+            if (npcCopy.Perks == null) npcCopy.Perks = new ExtendedList<PerkPlacement>(); // This will never happen
+            foreach (var entry in perksToAdd)
+            {
+                if (npcClass.SkillWeights.ContainsKey(entry.Key) && npcClass.SkillWeights[entry.Key] > 0)
+                {
+                    PerkPlacement p = new PerkPlacement { Rank = 1, Perk = entry.Value.FormKey.AsLink<IPerkGetter>() };
+                    npcCopy.Perks.Add(p);
                 }
             }
         }

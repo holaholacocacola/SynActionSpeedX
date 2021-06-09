@@ -101,6 +101,7 @@ namespace ActionSpeedX
                 {
 
                     if (armor.EditorID == null || armor.Keywords == null || armor.BodyTemplate == null || armor.BodyTemplate.ArmorType == ArmorType.Clothing) continue;
+                    if (this.settings.CuirassOnly && !armor.HasKeyword(Skyrim.Keyword.ArmorCuirass)) continue;
 
                     string armorType;
                     Dictionary<string, List<FormLink<IKeywordGetter>>> armorKeysMap;
@@ -153,11 +154,11 @@ namespace ActionSpeedX
                     }
                     string slot;
 
-                    if (armor.Keywords.Contains(Skyrim.Keyword.ArmorBoots)) slot          = BOOTS;
-                    else if (armor.Keywords.Contains(Skyrim.Keyword.ArmorCuirass)) slot   = CUIRASS;
-                    else if (armor.Keywords.Contains(Skyrim.Keyword.ArmorGauntlets)) slot = GAUNTLETS;
-                    else if (armor.Keywords.Contains(Skyrim.Keyword.ArmorHelmet)) slot    = HELMET;
-                    else if (armor.Keywords.Contains(Skyrim.Keyword.ArmorShield)) slot    = SHIELD;
+                    if (armor.HasKeyword(Skyrim.Keyword.ArmorBoots)) slot          = BOOTS;
+                    else if (armor.HasKeyword(Skyrim.Keyword.ArmorCuirass)) slot   = CUIRASS; //unfortunately this is checked twice with cuirass only setting
+                    else if (armor.HasKeyword(Skyrim.Keyword.ArmorGauntlets)) slot = GAUNTLETS;
+                    else if (armor.HasKeyword(Skyrim.Keyword.ArmorHelmet)) slot    = HELMET;
+                    else if (armor.HasKeyword(Skyrim.Keyword.ArmorShield)) slot    = SHIELD;
                     else
                     {
                         Console.WriteLine("No matching equip slot for " + armor.EditorID);
@@ -166,7 +167,7 @@ namespace ActionSpeedX
                     var nw = state.PatchMod.Armors.GetOrAddAsOverride(armor);
                     nw.Keywords?.Add(armorKeysMap[slot][tier]);
 
-                    // Attach script spells
+                    // Grab armor spells
                     if (armorType == LIGHT)
                     {
                         spellsToAdd = ActionSpeedX.FormKeys.ActionSpeedXSpells.LightArmorActionSpellCollection[slot][tier]; // expect an error here?
