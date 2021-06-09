@@ -14,11 +14,8 @@ namespace ActionSpeedX
     /// </summary>
     public class PerkPatcher
     {
-        //static ModKey Adamant   = ModKey.FromNameAndExtension("Adamant.esp");
-        //static ModKey Vokrii    = ModKey.FromNameAndExtension("Vokrii - Minimalistic Perks of Skyrim.esp");
-        static ModKey Ordinator = ModKey.FromNameAndExtension("Ordinator - Perks Of Skyrim.esp");
         private readonly IPatcherState<ISkyrimMod, ISkyrimModGetter> _state;
-        private readonly ActionSpeedX.Settings _settings; // in memory rep of settings.json
+        private readonly Settings _settings; // in memory rep of settings.json
 
         public PerkPatcher(IPatcherState<ISkyrimMod, ISkyrimModGetter> state, ActionSpeedX.Settings settings)
         {
@@ -29,7 +26,7 @@ namespace ActionSpeedX
 
         public void PatchPerks()
         {
-            if (this._state.LoadOrder.ContainsKey(Ordinator))
+            if (this._settings.GetPatchOption() == PatchOption.Ordinator)
             {
                 PatchIt(FormKeys.OrdinatorPerks);
             }

@@ -12,7 +12,10 @@ namespace ActionSpeedX
     public class Program
     {
         static Lazy<Settings> LazySettings = new Lazy<Settings>();
-        static Settings Settings => LazySettings.Value;
+        static Settings Settings           => LazySettings.Value;
+        static ModKey Adamant              = ModKey.FromNameAndExtension("Adamant.esp");
+        static ModKey Vokrii               = ModKey.FromNameAndExtension("Vokrii - Minimalistic Perks of Skyrim.esp");
+        static ModKey Ordinator            = ModKey.FromNameAndExtension("Ordinator - Perks Of Skyrim.esp");
 
         public static async Task<int> Main(string[] args)
         {
@@ -51,8 +54,25 @@ namespace ActionSpeedX
             if (! requiredFiles.All(value => foundFiles.Contains(value)))
                 throw new Exception("Missing one of the following json files in the Data folder: armor_descriptions, armor_materials, races");
 
-            // Perk Patcher. Appends Descriptions and Adds Passives
 
+            // Perk Patcher. Appends Descriptions and Adds Passives
+            if (state.LoadOrder.ContainsKey(Adamant))
+            {
+                Console.WriteLine("Adamant will be patched.");
+                Settings.SetPatchOption(PatchOption.Adamant);
+            }
+            else if (state.LoadOrder.ContainsKey(Ordinator))
+            {
+                Console.WriteLine("Ordinator will be patched.");
+                Settings.SetPatchOption(PatchOption.Ordinator);
+            }
+
+            else if (state.LoadOrder.ContainsKey(Vokrii))
+            {
+                Console.WriteLine("Vokrii will be patched.");
+                Settings.SetPatchOption(PatchOption.Vokrii);
+            }
+            // No else as default is vanilla
             Console.WriteLine("Patching Perks");
             PerkPatcher perkPatcher = new(state, Settings);
             perkPatcher.PatchPerks();
@@ -60,7 +80,7 @@ namespace ActionSpeedX
             // Spell Patcher. Modifies magnitudes.
             if (Settings.BalancePerkMods)
             {
-                ActionSpeedX.SpellPatcher spellPatcher = new SpellPatcher(state, Settings);
+                SpellPatcher spellPatcher = new SpellPatcher(state, Settings);
                 if(!spellPatcher.PatchSpells()) throw new Exception("Error encountered while balancing perks. Check logs.");
             }
 
@@ -71,12 +91,12 @@ namespace ActionSpeedX
 
             // Armor Patcher. Adds keywords that effects work off.
             Console.WriteLine("Patching armors");
-            ActionSpeedX.ArmorPatcher armorPatcher = new ArmorPatcher(state, Settings);
+            ArmorPatcher armorPatcher = new ArmorPatcher(state, Settings);
             armorPatcher.PatchArmors();
 
-            // Npc patcher. AddsPerks. Only adds Power Attack and Novice Perks if the npc has an applicable class for it.
+            // Npc patcher. AddsPerks. Only adds Power Attack/Spell Costs and Novice Perks if the npc has an applicable class for it determined by which settings are enabled.
             Console.WriteLine("Patching npcs");
-            ActionSpeedX.NpcPatcher npcPatcher = new NpcPatcher(state, Settings);
+            NpcPatcher npcPatcher = new NpcPatcher(state, Settings);
             npcPatcher.PatchNpcs();
 
         }

@@ -19,7 +19,7 @@ namespace ActionSpeedX
         const string RACES_FILE = "races.json";
 
         private readonly IPatcherState<ISkyrimMod, ISkyrimModGetter> _state;
-        private readonly ActionSpeedX.Settings _settings; // in memory rep of settings.json
+        private readonly Settings _settings; // in memory rep of settings.json
         private readonly HashSet<string> _validRaces; // contains valid races to add perks too.
         
         private readonly List<FormLink<IPerkGetter>> _perksToDistribute; // Contains form ids of perks to add to every npc.
@@ -31,7 +31,7 @@ namespace ActionSpeedX
             this._settings            = settings;
             this._validRaces          = LoadRaces();
             this._perksToDistribute   = new();
-            this._perkBlah            =        FormKeys.vanillaPerkBlah;
+            this._perkBlah            = FormKeys.vanillaPerkBlah;
 
             /* ASX-Perf-Refactor. Spells are added on equip. We only need to attach Power Attack and spell cost perks as those use perk entry points.
             if (this.settings.AttackSpeed) perksToAdd.AddRange(ActionSpeedX.FormKeys.Perks.AttackSpeed);
@@ -141,8 +141,9 @@ namespace ActionSpeedX
             {
                 if (npcClass.SkillWeights.ContainsKey(entry.Key) && npcClass.SkillWeights[entry.Key] > 0)
                 {
+                    
                     PerkPlacement p = new PerkPlacement { Rank = 1, Perk = entry.Value.FormKey.AsLink<IPerkGetter>() };
-                    npcCopy.Perks.Add(p);
+                    if(!npcCopy.Perks.Contains(p) ) npcCopy.Perks.Add(p); // List :(
                 }
             }
         }

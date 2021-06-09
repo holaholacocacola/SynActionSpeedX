@@ -47,7 +47,7 @@ namespace ActionSpeedX
 
 
         private readonly IPatcherState<ISkyrimMod, ISkyrimModGetter> state;
-        private readonly ActionSpeedX.Settings settings; // in memory rep of settings.json
+        private readonly Settings settings; // in memory rep of settings.json
         private readonly Dictionary<string, bool> descriptionSettings; 
         private readonly JObject armorDescriptions; // in memory rep of armor_descriptions.json
         private readonly Dictionary<string, int> materialRanks; // In memory rep of armor_materials.json
@@ -170,11 +170,11 @@ namespace ActionSpeedX
                     // Grab armor spells
                     if (armorType == LIGHT)
                     {
-                        spellsToAdd = ActionSpeedX.FormKeys.ActionSpeedXSpells.LightArmorActionSpellCollection[slot][tier]; // expect an error here?
+                        spellsToAdd = FormKeys.ActionSpeedXSpells.LightArmorActionSpellCollection[slot][tier]; // expect an error here?
                     }
                     else
                     {
-                        spellsToAdd = ActionSpeedX.FormKeys.ActionSpeedXSpells.HeavyArmorActionSpellCollection[slot][tier]; // expect an error here?
+                        spellsToAdd = FormKeys.ActionSpeedXSpells.HeavyArmorActionSpellCollection[slot][tier]; // expect an error here?
                     }
 
                     // Calc script to add
@@ -190,13 +190,12 @@ namespace ActionSpeedX
                         else if (property.Name == RANGED_SPELL && spellsToAdd.RangedAttackSpell != null) property.Object.FormKey = spellsToAdd.RangedAttackSpell.FormKey;// useless check but we did set the field as nullable because of laziness
                     }
 
-                    if (nw.VirtualMachineAdapter == null) nw.VirtualMachineAdapter = new();
+                    nw.VirtualMachineAdapter ??= new();
+                    //if (nw.VirtualMachineAdapter == null) nw.VirtualMachineAdapter = new();
                     nw.VirtualMachineAdapter.Scripts.Add(scriptCopy);
 
                     if (this.settings.Descriptions) PatchArmorDescription(nw, armorType, slot, tier);
                     
-
-
                 } catch (Exception e)
                 {
                     throw RecordException.Create("Error processing armor record", armor, e);
