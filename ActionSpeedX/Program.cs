@@ -7,6 +7,8 @@ using Mutagen.Bethesda.Synthesis;
 using Mutagen.Bethesda.Skyrim;
 using System.Threading.Tasks;
 
+using ActionSpeedX.Patchers;
+
 namespace ActionSpeedX
 {
     public class Program
@@ -74,30 +76,32 @@ namespace ActionSpeedX
             }
             // No else as default is vanilla
             Console.WriteLine("Patching Perks");
-            PerkPatcher perkPatcher = new(state, Settings);
-            perkPatcher.PatchPerks();
 
-            // Spell Patcher. Modifies magnitudes.
+            // This will attach passive abilities to novice perks.
+            PerkPatcher perkPatcher = new(state, Settings);
+            perkPatcher.Run();
+
+            // Spell Patcher. Modifies magnitudes
             if (Settings.BalancePerkMods)
             {
                 SpellPatcher spellPatcher = new SpellPatcher(state, Settings);
-                if(!spellPatcher.PatchSpells()) throw new Exception("Error encountered while balancing perks. Check logs.");
+                spellPatcher.Run();
             }
 
             // Global Patcher. Sets Flags for loadscreens and which spells get added onequippedforms.
             Console.WriteLine("Patching Settings");
             GlobalPatcher globalPatcher = new GlobalPatcher(state, Settings);
-            globalPatcher.PatchGlobals();
+            globalPatcher.Run();
 
-            // Armor Patcher. Adds keywords that effects work off.
+            // Armor Patcher. Adds keywords that effects work off and attachs form script to armors
             Console.WriteLine("Patching armors");
             ArmorPatcher armorPatcher = new ArmorPatcher(state, Settings);
-            armorPatcher.PatchArmors();
+            armorPatcher.Run();
 
-            // Npc patcher. AddsPerks. Only adds Power Attack/Spell Costs and Novice Perks if the npc has an applicable class for it determined by which settings are enabled.
+            // Npc patcher. AddsPerks. Only adds Power Attack/Spell Costs and Novice Perks if the npc has an applicable class for it determined by which settings are enabled. Also adds racials/factions if enabled
             Console.WriteLine("Patching npcs");
             NpcPatcher npcPatcher = new NpcPatcher(state, Settings);
-            npcPatcher.PatchNpcs();
+            npcPatcher.Run();
 
         }
     }

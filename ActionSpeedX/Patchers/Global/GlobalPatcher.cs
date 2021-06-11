@@ -23,7 +23,7 @@ namespace ActionSpeedX.Patchers
             this._settings = settings;
         }
 
-        public void PatchGlobals()
+        public void Run()
         {
             if (!_settings.AttackSpeed) DisableGlobal(ActionSpeedX_.Global.ASX_AttackSpeed);
             if (!_settings.RangedAttack) DisableGlobal(ActionSpeedX_.Global.ASX_RAttackSpeed);

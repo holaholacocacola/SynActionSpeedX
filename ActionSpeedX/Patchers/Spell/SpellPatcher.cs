@@ -15,15 +15,14 @@ namespace ActionSpeedX
         private readonly Settings _settings; // in memory rep of settings.json
         public SpellPatcher(IPatcherState<ISkyrimMod, ISkyrimModGetter> state, Settings settings)
         {
-            this._state = state;
+            this._state    = state;
             this._settings = settings;
         }
 
         public void Run()
         {
             // check all supported mods because of abominations like vokriinator black
-            bool success = true;
-
+            bool success;
             if (this._settings.GetPatchOption() == PatchOption.Adamant)
             {
                 Console.WriteLine("Adamant will be patched.");
@@ -54,7 +53,7 @@ namespace ActionSpeedX
             {
                 foreach (var stamModifier in staminaSpells)
                 {
-                    if (!AdjustEffect(stamModifier)) hasError = true;
+                    if (!AdjustSpellEffect(stamModifier)) hasError = true;
                 }
             }
 
@@ -62,14 +61,14 @@ namespace ActionSpeedX
             {
                 foreach (var speedModifier in speedSpells)
                 {
-                    if (!AdjustEffect(speedModifier)) hasError = true;
+                    if (!AdjustSpellEffect(speedModifier)) hasError = true;
                 }
             }
 
             return !hasError;
         }
 
-        private bool AdjustEffect(Statics.SpellFormEffectsMagnitudeMapping spellToModify)
+        private bool AdjustSpellEffect(Statics.SpellFormEffectsMagnitudeMapping spellToModify)
         {
             if (!this._state.LinkCache.TryResolve<ISpellGetter>(spellToModify.SpellForm.FormKey, out var spell))
             {
