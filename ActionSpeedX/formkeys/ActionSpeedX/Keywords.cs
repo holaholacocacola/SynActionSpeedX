@@ -76,35 +76,6 @@ namespace Mutagen.Bethesda.FormKeys.SkyrimSE
             private static FormLink<IKeywordGetter> ASX_MediumArmorShieldT3    => Construct(0x003EB8);
             private static FormLink<IKeywordGetter> ASX_MediumArmorShieldT4    => Construct(0x003EB9);
             */
-
-            // Light armor keywords that will be added to equipment
-            static readonly List<FormLink<IKeywordGetter> > LightBoots     = new() { ASX_LightArmorBootsT1, ASX_LightArmorBootsT2, ASX_LightArmorBootsT3, ASX_LightArmorBootsT4 };
-            static readonly List<FormLink<IKeywordGetter> > LightCuirass   = new() { ASX_LightArmorCuirassT1, ASX_LightArmorCuirassT2, ASX_LightArmorCuirassT3, ASX_LightArmorCuirassT4 };
-            static readonly List<FormLink<IKeywordGetter> > LightGauntlets = new() { ASX_LightArmorGauntletsT1, ASX_LightArmorGauntletsT2, ASX_LightArmorGauntletsT3, ASX_LightArmorGauntletsT4 };
-            static readonly List<FormLink<IKeywordGetter> > LightHelmet    = new() { ASX_LightArmorHelmetT1, ASX_LightArmorHelmetT2, ASX_LightArmorHelmetT3, ASX_LightArmorHelmetT4 };
-            static readonly List<FormLink<IKeywordGetter> > LightShield    = new() { ASX_LightArmorShieldT1, ASX_LightArmorShieldT2, ASX_LightArmorShieldT3, ASX_LightArmorShieldT4 };
-            public static readonly Dictionary<String, List<FormLink<IKeywordGetter> >> LightArmorKeywordCollection = new Dictionary<string, List<FormLink<IKeywordGetter> >> {
-                { "Boots", LightBoots },
-                { "Cuirass", LightCuirass },
-                { "Gauntlets", LightGauntlets },
-                { "Helmet", LightHelmet},
-                { "Shield", LightShield}
-            };
-
-            // Heavy armor keywords that will be added to equipment
-            static readonly List<FormLink<IKeywordGetter> > HeavyBoots     = new() { ASX_HeavyArmorBootsT1, ASX_HeavyArmorBootsT2, ASX_HeavyArmorBootsT3, ASX_HeavyArmorBootsT4 };
-            static readonly List<FormLink<IKeywordGetter> > HeavyCuirass   = new() { ASX_HeavyArmorCuirassT1, ASX_HeavyArmorCuirassT2, ASX_HeavyArmorCuirassT3, ASX_HeavyArmorCuirassT4 };
-            static readonly List<FormLink<IKeywordGetter> > HeavyGauntlets = new() { ASX_HeavyArmorGauntletsT1, ASX_HeavyArmorGauntletsT2, ASX_HeavyArmorGauntletsT3, ASX_HeavyArmorGauntletsT4 };
-            static readonly List<FormLink<IKeywordGetter> > HeavyHelmet    = new() { ASX_HeavyArmorHelmetT1, ASX_HeavyArmorHelmetT2, ASX_HeavyArmorHelmetT3, ASX_HeavyArmorHelmetT4 };
-            static readonly List<FormLink<IKeywordGetter> > HeavyShield    = new() { ASX_HeavyArmorShieldT1, ASX_HeavyArmorShieldT2, ASX_HeavyArmorShieldT3, ASX_HeavyArmorShieldT4 };
-            public static readonly Dictionary<String, List<FormLink<IKeywordGetter> >> HeavyArmorKeywordCollection = new Dictionary<string, List<FormLink<IKeywordGetter> >> {
-                { "Boots", HeavyBoots },
-                { "Cuirass", HeavyCuirass },
-                { "Gauntlets", HeavyGauntlets },
-                { "Helmet", HeavyHelmet},
-                { "Shield", HeavyShield}
-            };
-
             
             /*
             static readonly List<FormLink<IKeywordGetter> > mediumBoots     = new() { ASX_MediumArmorBootsT1, ASX_MediumArmorBootsT2, ASX_MediumArmorBootsT3, ASX_MediumArmorBootsT4 };
