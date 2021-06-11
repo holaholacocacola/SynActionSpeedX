@@ -1,20 +1,20 @@
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.FormKeys.SkyrimSE;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Synthesis;
 using Newtonsoft.Json.Linq;
 using Noggog;
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.IO;
-using Mutagen.Bethesda.Plugins.Exceptions;
 
-namespace ActionSpeedX
+using Statics = ActionSpeedX.Patchers.ArmorStatics;
+
+
+namespace ActionSpeedX.Patchers
 {
-
-
     public class ArmorPatcher
     {
 
@@ -27,7 +27,7 @@ namespace ActionSpeedX
         const string RANGED_ATTACK  = "RangedAttack";
 
         const string LIGHT = "Light";
-        //const string MEDIUM         = "Medium";
+        //const string MEDIUM = "Medium";
         const string HEAVY = "Heavy";
 
         const string GAUNTLETS = "Gauntlets";
@@ -46,32 +46,32 @@ namespace ActionSpeedX
         const string DESCRIPTIONS_FILE = "armor_descriptions.json";
 
 
-        private readonly IPatcherState<ISkyrimMod, ISkyrimModGetter> state;
-        private readonly Settings settings; // in memory rep of settings.json
-        private readonly Dictionary<string, bool> descriptionSettings; 
-        private readonly JObject armorDescriptions; // in memory rep of armor_descriptions.json
-        private readonly Dictionary<string, int> materialRanks; // In memory rep of armor_materials.json
+        private readonly IPatcherState<ISkyrimMod, ISkyrimModGetter> _state;
+        private readonly Settings _settings; // in memory rep of settings.json
+        private readonly Dictionary<string, bool> _descriptionSettings; 
+        private readonly JObject _armorDescriptions; // in memory rep of armor_descriptions.json
+        private readonly Dictionary<string, int> _materialRanks; // In memory rep of armor_materials.json
 
-        public ArmorPatcher(IPatcherState<ISkyrimMod, ISkyrimModGetter> state, ActionSpeedX.Settings settings)
+        public ArmorPatcher(IPatcherState<ISkyrimMod, ISkyrimModGetter> state, Settings settings)
         {
-            this.state = state;
-            this.settings = settings;
+            this._state = state;
+            this._settings = settings;
             // This is looped through when adding descriptions. See PatchArmorDescription for usage.
-            this.descriptionSettings = new Dictionary<string, bool> {
-                {ATTACK_SPEED, this.settings.AttackSpeed },
-                {MOVEMENT_SPEED, this.settings.MoveSpeed},
-                {MAGICKA, this.settings.MagickaRegen},
-                {POWER_ATTACK, this.settings.PowerAttacks },
-                {RANGED_ATTACK, this.settings.RangedAttack },
-                {SPELL_COST, this.settings.SpellCosts },
-                {STAMINA, this.settings.StaminaRegen }
+            this._descriptionSettings = new Dictionary<string, bool> {
+                {ATTACK_SPEED, this._settings.AttackSpeed },
+                {MOVEMENT_SPEED, this._settings.MoveSpeed},
+                {MAGICKA, this._settings.MagickaRegen},
+                {POWER_ATTACK, this._settings.PowerAttacks },
+                {RANGED_ATTACK, this._settings.RangedAttack },
+                {SPELL_COST, this._settings.SpellCosts },
+                {STAMINA, this._settings.StaminaRegen }
             };
 
-            this.materialRanks     = LoadMaterialsFromDisk();
-            this.armorDescriptions = LoadDescriptionsFromDisk();
+            this._materialRanks     = LoadMaterialsFromDisk();
+            this._armorDescriptions = LoadDescriptionsFromDisk();
         }
 
-        public void PatchArmors()
+        public void Run()
         {
             /**
              * 1. Loop over all armors.
@@ -81,9 +81,9 @@ namespace ActionSpeedX
              * 5. If description setting is turned on, update the item description.
              */
 
-
+            
             ScriptEntry templateArmorScript, templateShieldScript;
-            if (!FormKeys.Armor.ASX_ArmorTemplate.TryResolve(this.state.LinkCache, out var templateArmor) || !FormKeys.Armor.ASX_ShieldTemplate.TryResolve(this.state.LinkCache, out var templateShield))
+            if (!ActionSpeedX_.Armor.ASX_ArmorTemplate.TryResolve(this._state.LinkCache, out var templateArmor) || !ActionSpeedX_.Armor.ASX_ShieldTemplate.TryResolve(this._state.LinkCache, out var templateShield))
             {
                 throw new Exception("Could not resolve armor templates");
             }
@@ -94,27 +94,25 @@ namespace ActionSpeedX
             templateArmorScript  = templateArmor.VirtualMachineAdapter.Scripts[0].DeepCopy();
             templateShieldScript = templateShield.VirtualMachineAdapter.Scripts[0].DeepCopy();
 
-
-            foreach (var armor in this.state.LoadOrder.PriorityOrder.WinningOverrides<IArmorGetter>())
+            foreach (var armor in this._state.LoadOrder.PriorityOrder.WinningOverrides<IArmorGetter>())
             {
                 try
                 {
-
                     if (armor.EditorID == null || armor.Keywords == null || armor.BodyTemplate == null || armor.BodyTemplate.ArmorType == ArmorType.Clothing) continue;
-                    if (this.settings.CuirassOnly && !armor.HasKeyword(Skyrim.Keyword.ArmorCuirass)) continue;
+                    if (this._settings.CuirassOnly && !armor.HasKeyword(Skyrim.Keyword.ArmorCuirass)) continue;
 
                     string armorType;
                     Dictionary<string, List<FormLink<IKeywordGetter>>> armorKeysMap;
-                    ActionSpeedX.FormKeys.ArmorActionSpells spellsToAdd;
+                    ArmorActionSpells spellsToAdd;
                     if (armor.BodyTemplate.ArmorType == ArmorType.LightArmor)
                     {
-                        armorKeysMap = FormKeys.Keywords.LightArmorKeywordCollection;
+                        armorKeysMap = Statics.LightArmorKeywordCollection;
                         armorType = LIGHT;
 
                     }
                     else
                     {
-                        armorKeysMap = FormKeys.Keywords.HeavyArmorKeywordCollection;
+                        armorKeysMap = Statics.HeavyArmorKeywordCollection;
                         armorType = HEAVY;
                     }
 
@@ -126,11 +124,11 @@ namespace ActionSpeedX
 
                     foreach (var keyword in armor.Keywords)
                     {
-                        if (keyword.TryResolve(state.LinkCache, out var kw))
+                        if (keyword.TryResolve(_state.LinkCache, out var kw))
                         {
-                            if (kw.EditorID != null && this.materialRanks.ContainsKey(kw.EditorID))
+                            if (kw.EditorID != null && this._materialRanks.ContainsKey(kw.EditorID))
                             {
-                                int rank = this.materialRanks[kw.EditorID];
+                                int rank = this._materialRanks[kw.EditorID];
                                 if (rank > tier) tier = rank;
                             }
                         }
@@ -164,17 +162,17 @@ namespace ActionSpeedX
                         Console.WriteLine("No matching equip slot for " + armor.EditorID);
                         continue;
                     }
-                    var nw = state.PatchMod.Armors.GetOrAddAsOverride(armor);
+                    var nw = _state.PatchMod.Armors.GetOrAddAsOverride(armor);
                     nw.Keywords?.Add(armorKeysMap[slot][tier]);
 
                     // Grab armor spells
                     if (armorType == LIGHT)
                     {
-                        spellsToAdd = FormKeys.ActionSpeedXSpells.LightArmorActionSpellCollection[slot][tier]; // expect an error here?
+                        spellsToAdd = Statics.LightArmorActionSpellCollection[slot][tier]; // expect an error here?
                     }
                     else
                     {
-                        spellsToAdd = FormKeys.ActionSpeedXSpells.HeavyArmorActionSpellCollection[slot][tier]; // expect an error here?
+                        spellsToAdd = Statics.HeavyArmorActionSpellCollection[slot][tier]; // expect an error here?
                     }
 
                     // Calc script to add
@@ -191,10 +189,9 @@ namespace ActionSpeedX
                     }
 
                     nw.VirtualMachineAdapter ??= new();
-                    //if (nw.VirtualMachineAdapter == null) nw.VirtualMachineAdapter = new();
                     nw.VirtualMachineAdapter.Scripts.Add(scriptCopy);
 
-                    if (this.settings.Descriptions) PatchArmorDescription(nw, armorType, slot, tier);
+                    if (this._settings.Descriptions) PatchArmorDescription(nw, armorType, slot, tier);
                     
                 } catch (Exception e)
                 {
@@ -215,7 +212,7 @@ namespace ActionSpeedX
 
             // add descriptions really ugly dont look
             string newDescription = "";
-            foreach (var item in this.descriptionSettings)
+            foreach (var item in this._descriptionSettings)
             {
                 if (item.Value)
                 {
@@ -223,14 +220,14 @@ namespace ActionSpeedX
                     {
                         string description = "";
                         string magnitude   = "";
-                        JToken? dex        = this.armorDescriptions.SelectToken($"Descriptions.{item.Key}");
+                        JToken? dex        = this._armorDescriptions.SelectToken($"Descriptions.{item.Key}");
 
                         if (dex != null)
                         {
                             description = dex.ToString();
                         }
                         
-                        JToken? mag = this.armorDescriptions.SelectToken($"Magnitudes.{armorSlot}.{item.Key}.{armorType}[{armorTier}]");
+                        JToken? mag = this._armorDescriptions.SelectToken($"Magnitudes.{armorSlot}.{item.Key}.{armorType}[{armorTier}]");
                         
                         if (mag != null)
                         {
@@ -265,7 +262,7 @@ namespace ActionSpeedX
 
         private Dictionary<string, int> LoadMaterialsFromDisk()
         {
-            string file = Path.Combine(this.state.ExtraSettingsDataPath, MATERIALS_FILE); // already validated in callee
+            string file = Path.Combine(this._state.ExtraSettingsDataPath, MATERIALS_FILE); // already validated in callee
             var armorMaterials = JObject.Parse(File.ReadAllText(file));
             Dictionary<string, int>? materials = armorMaterials.ToObject<Dictionary<string, int>>();
             if (materials == null)
@@ -277,7 +274,7 @@ namespace ActionSpeedX
 
         private JObject LoadDescriptionsFromDisk()
         {
-            string file = Path.Combine(this.state.ExtraSettingsDataPath, DESCRIPTIONS_FILE); // already validated in callee
+            string file = Path.Combine(this._state.ExtraSettingsDataPath, DESCRIPTIONS_FILE); // already validated in callee
             return JObject.Parse(File.ReadAllText(file));
         }
 

@@ -1,17 +1,14 @@
-using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Synthesis;
 using Noggog;
 using System;
 using System.Collections.Generic;
 
+using Statics = ActionSpeedX.Patchers.PerkStatics;
 
-namespace ActionSpeedX
+namespace ActionSpeedX.Patchers
 {
-    /// <summary>
-    /// Disable global variables. These are checked when equipping items to determine which effects to distrubute.
-    /// 
-    /// </summary>
+
     public class PerkPatcher
     {
         private readonly IPatcherState<ISkyrimMod, ISkyrimModGetter> _state;
@@ -24,21 +21,24 @@ namespace ActionSpeedX
 
         }
 
-        public void PatchPerks()
+
+        public void Run()
         {
             if (this._settings.GetPatchOption() == PatchOption.Ordinator)
             {
-                PatchIt(FormKeys.OrdinatorPerks);
+                PatchIt(Statics.OrdinatorPerks);
             }
             else
             { // Adamant and Vokrii use the same perks as vanilla.
-                PatchIt(FormKeys.VanillaPerks);
+                PatchIt(Statics.VanillaPerks);
             }
-            
-        
         }
 
-        private void UpdatePerkDescriptionAndAbilities(List<FormKeys.PerkModifier> perksToUpdate)
+        /// <summary>
+        /// Appends Abilities and Updates Perk Description
+        /// </summary>
+        /// <param name="perksToUpdate"></param>
+        private void UpdatePerkDescriptionAndAbilities(List<Statics.PerkModifier> perksToUpdate)
         {
             foreach(var perkModifier in perksToUpdate)
             {
@@ -64,7 +64,7 @@ namespace ActionSpeedX
             }
         }
 
-        private void PatchIt(FormKeys.PerkModifiers modifyMe)
+        private void PatchIt(Statics.PerkModifierCollection modifyMe)
         {
             if (this._settings.StaminaRegen) UpdatePerkDescriptionAndAbilities(modifyMe.StaminaPerks);
             if (this._settings.MagickaRegen) UpdatePerkDescriptionAndAbilities(modifyMe.MagickaPerks);

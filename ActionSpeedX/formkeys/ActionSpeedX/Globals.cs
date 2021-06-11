@@ -1,12 +1,11 @@
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Plugins;
 
-namespace ActionSpeedX
+namespace Mutagen.Bethesda.FormKeys.SkyrimSE
 {
-    public static partial class FormKeys
+    public static partial class ActionSpeedX_
     {
-        public static class Globals
+        public static class Global
         {
             private static readonly ModKey ModKey                  = ModKey.FromNameAndExtension("ActionSpeedX.esp");
             public static FormLink<IGlobalGetter> ASX_AttackSpeed  => ModKey.MakeFormKey(0xb043);

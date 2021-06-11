@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+using Statics = ActionSpeedX.Patchers.NpcStatics;
+using PerkStatics = ActionSpeedX.Patchers.PerkStatics; 
 
 namespace ActionSpeedX
 {
@@ -23,7 +25,7 @@ namespace ActionSpeedX
         private readonly HashSet<string> _validRaces; // contains valid races to add perks too.
         
         private readonly List<FormLink<IPerkGetter>> _perksToDistribute; // Contains form ids of perks to add to every npc.
-        private readonly FormKeys.PerkBlah _perkBlah;
+        private readonly Statics.NpcClassSkillPerksMappings _perkMapping; // Contains Skill-Novice Perk Mapping
 
         public NpcPatcher(IPatcherState<ISkyrimMod, ISkyrimModGetter> state, ActionSpeedX.Settings settings)
         {
@@ -31,7 +33,7 @@ namespace ActionSpeedX
             this._settings            = settings;
             this._validRaces          = LoadRaces();
             this._perksToDistribute   = new();
-            this._perkBlah            = FormKeys.vanillaPerkBlah;
+            this._perkMapping         = Statics.VanillaSkillPerkMapping;
 
             /* ASX-Perf-Refactor. Spells are added on equip. We only need to attach Power Attack and spell cost perks as those use perk entry points.
             if (this.settings.AttackSpeed) perksToAdd.AddRange(ActionSpeedX.FormKeys.Perks.AttackSpeed);
@@ -40,8 +42,8 @@ namespace ActionSpeedX
             if (this.settings.RangedAttack) perksToAdd.AddRange(ActionSpeedX.FormKeys.Perks.RangedSpeed);
             if (this.settings.StaminaRegen) perksToAdd.AddRange(ActionSpeedX.FormKeys.Perks.StaminaRegen);
             */
-            if (this._settings.PowerAttacks) _perksToDistribute.AddRange(FormKeys.ActionSpeedXPerks.PowerAttacks);
-            if (this._settings.SpellCosts) _perksToDistribute.AddRange(FormKeys.ActionSpeedXPerks.SpellCosts);
+            if (this._settings.PowerAttacks) _perksToDistribute.AddRange(PerkStatics.PowerAttacks);
+            if (this._settings.SpellCosts) _perksToDistribute.AddRange(PerkStatics.SpellCosts);
         }
 
         private HashSet<string> LoadRaces()
@@ -55,17 +57,16 @@ namespace ActionSpeedX
                 throw new Exception("Could not parse armor materials file");
             }
             HashSet<string> parsed = new HashSet<string>(availableRaces["default"]); // this could throw
-            //if (this.settings.Creatures) parsed.UnionWith(availableRaces["creatures"]); // disable creatures for now
             return parsed;
         }
 
-        public void PatchNpcs()
+        public void Run()
         {
             /*
              * 1. Loop over all npcs.
              * 2. Verify it is not a ghost, an inherited template, and has a valid race
              * 3. Check if it has a match with a race in races.json
-             * 4. Add perks based on settings.json
+             * 4. Add perks(power attack, spell cost) based on settings.json
              * 5. Check npcs class and distribute novice perk if applicable
              * 
              */
@@ -89,14 +90,14 @@ namespace ActionSpeedX
                     if (npc.EditorID == "Player" && this._settings.Racials)
                     {
                         // a quest runs after racemenu that will sift and apply the correct racial perk. This perk is removed after. 
-                        PerkPlacement p = new PerkPlacement { Rank = 1, Perk = FormKeys.ActionSpeedXPerks.ASX_DummyPerk.FormKey.AsLink<IPerkGetter>() };
+                        PerkPlacement p = new PerkPlacement { Rank = 1, Perk = ActionSpeedX_.Perk.ASX_DummyPerk.FormKey.AsLink<IPerkGetter>() };
                         npcCopy.Perks.Add(p);
                         continue;
                     }
 
-                    if (this._settings.Racials && FormKeys.ActionSpeedXPerks.RacialPerks.ContainsKey(race.EditorID))
+                    if (this._settings.Racials && PerkStatics.RacialPerks.ContainsKey(race.EditorID))
                     {
-                        PerkPlacement p = new PerkPlacement { Rank = 1, Perk = FormKeys.ActionSpeedXPerks.RacialPerks[race.EditorID].FormKey.AsLink<IPerkGetter>() };
+                        PerkPlacement p = new PerkPlacement { Rank = 1, Perk = PerkStatics.RacialPerks[race.EditorID].FormKey.AsLink<IPerkGetter>() };
                         npcCopy.Perks.Add(p);
                     }
 
@@ -104,9 +105,9 @@ namespace ActionSpeedX
                     {
                         foreach (var faction in npc.Factions)
                         {
-                            if (faction.Faction.TryResolve(this._state.LinkCache, out var wtf) && wtf.EditorID != null && FormKeys.ActionSpeedXPerks.FactionPerks.ContainsKey(wtf.EditorID))
+                            if (faction.Faction.TryResolve(this._state.LinkCache, out var wtf) && wtf.EditorID != null && PerkStatics.FactionPerks.ContainsKey(wtf.EditorID))
                             {
-                                PerkPlacement p = new PerkPlacement { Rank = 1, Perk = FormKeys.ActionSpeedXPerks.FactionPerks[wtf.EditorID].FormKey.AsLink<IPerkGetter>() };
+                                PerkPlacement p = new PerkPlacement { Rank = 1, Perk = PerkStatics.FactionPerks[wtf.EditorID].FormKey.AsLink<IPerkGetter>() };
                                 npcCopy.Perks.Add(p);
                                 
                             }
@@ -116,11 +117,11 @@ namespace ActionSpeedX
                     //check skill weights. This will distribute passive perks to npcs that can actually make use of them. Map of skillweights -> perk
                     if (npc.Class != null && npc.Class.TryResolve(this._state.LinkCache, out var npcClass))
                     {
-                        if (this._settings.StaminaRegen) DistributeClassPerks(npcCopy, this._perkBlah.StaminaSkillPerks, npcClass);
-                        if (this._settings.MagickaRegen) DistributeClassPerks(npcCopy, this._perkBlah.MagickaSkillPerks, npcClass);
-                        if (this._settings.MoveSpeed)    DistributeClassPerks(npcCopy, this._perkBlah.SpeedSkillPerks, npcClass);
-                        if (this._settings.AttackSpeed)  DistributeClassPerks(npcCopy, this._perkBlah.AttackSpeedSkillPerks, npcClass);
-                        if (this._settings.RangedAttack) DistributeClassPerks(npcCopy, this._perkBlah.RangedAttackSkillPerks, npcClass);
+                        if (this._settings.StaminaRegen) DistributeClassPerks(npcCopy, this._perkMapping.StaminaSkillPerks, npcClass);
+                        if (this._settings.MagickaRegen) DistributeClassPerks(npcCopy, this._perkMapping.MagickaSkillPerks, npcClass);
+                        if (this._settings.MoveSpeed)    DistributeClassPerks(npcCopy, this._perkMapping.SpeedSkillPerks, npcClass);
+                        if (this._settings.AttackSpeed)  DistributeClassPerks(npcCopy, this._perkMapping.AttackSpeedSkillPerks, npcClass);
+                        if (this._settings.RangedAttack) DistributeClassPerks(npcCopy, this._perkMapping.RangedAttackSkillPerks, npcClass);
 
                     }
 
@@ -130,18 +131,18 @@ namespace ActionSpeedX
                 }
             }
 
-            //add player check here
+            //move player check here
 
         }
 
         private void DistributeClassPerks(Npc npcCopy, Dictionary<Skill, FormLink<IPerkGetter>> perksToAdd, IClassGetter npcClass)
         {
-            if (npcCopy.Perks == null) npcCopy.Perks = new ExtendedList<PerkPlacement>(); // This will never happen
+            npcCopy.Perks ??= new();
+            //if (npcCopy.Perks == null) npcCopy.Perks = new ExtendedList<PerkPlacement>(); // This will never happen
             foreach (var entry in perksToAdd)
             {
                 if (npcClass.SkillWeights.ContainsKey(entry.Key) && npcClass.SkillWeights[entry.Key] > 0)
                 {
-                    
                     PerkPlacement p = new PerkPlacement { Rank = 1, Perk = entry.Value.FormKey.AsLink<IPerkGetter>() };
                     if(!npcCopy.Perks.Contains(p) ) npcCopy.Perks.Add(p); // List :(
                 }

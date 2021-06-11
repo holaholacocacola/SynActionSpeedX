@@ -1,10 +1,10 @@
-using Mutagen.Bethesda;
-using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Synthesis;
 using Noggog;
 using System;
 using System.Collections.Generic;
+
+using Statics = ActionSpeedX.Patchers.SpellStatics;
 
 namespace ActionSpeedX
 {
@@ -19,8 +19,7 @@ namespace ActionSpeedX
             this._settings = settings;
         }
 
-
-        public bool PatchSpells()
+        public void Run()
         {
             // check all supported mods because of abominations like vokriinator black
             bool success = true;
@@ -28,27 +27,27 @@ namespace ActionSpeedX
             if (this._settings.GetPatchOption() == PatchOption.Adamant)
             {
                 Console.WriteLine("Adamant will be patched.");
-                success = RebalancePerks(FormKeys.AdamantSpells.StaminaSpells, FormKeys.AdamantSpells.MoveSpells);
-                if (!success) Console.WriteLine("Failed to patch adamant");
+                success = RebalancePerks(Statics.AdamantSpellEffectMappings.StaminaSpells, Statics.AdamantSpellEffectMappings.SpeedSpells);
+                if (!success) throw new Exception("Failed to patch adamant");
             }
 
             else if (this._settings.GetPatchOption() == PatchOption.Ordinator)
             {
                 Console.WriteLine("Ordinator will be patched.");
-                success = RebalancePerks(FormKeys.OrdinatorSpells.StaminaSpells, FormKeys.OrdinatorSpells.MoveSpells);
-                if (!success) Console.WriteLine("Failed to patch ordinator");
+                success = RebalancePerks(Statics.OrdinatorSpellEffectMappings.StaminaSpells, Statics.OrdinatorSpellEffectMappings.SpeedSpells);
+                if (!success) throw new Exception("Failed to patch ordinator");
             }
 
             else if (this._settings.GetPatchOption() == PatchOption.Vokrii)
             {
                 Console.WriteLine("Vokrii will be patched.");
-                success = RebalancePerks(FormKeys.VokriiSpells.StaminaSpells, FormKeys.VokriiSpells.MoveSpells);
-                if (!success) Console.WriteLine("Failed to patch vokrii");
+                success = RebalancePerks(Statics.VokriiSpellEffectMappings.StaminaSpells, Statics.VokriiSpellEffectMappings.SpeedSpells);
+                if (!success) throw new Exception("Failed to patch vokrii");
             }
-            return success;
+           
         }
 
-        private bool RebalancePerks(List<FormKeys.SpellEffectModifier> staminaSpells, List<FormKeys.SpellEffectModifier> speedSpells)
+        private bool RebalancePerks(List<Statics.SpellFormEffectsMagnitudeMapping> staminaSpells, List<Statics.SpellFormEffectsMagnitudeMapping> speedSpells)
         {
             bool hasError = false;
             if (this._settings.StaminaRegen)
@@ -70,7 +69,7 @@ namespace ActionSpeedX
             return !hasError;
         }
 
-        private bool AdjustEffect(FormKeys.SpellEffectModifier spellToModify)
+        private bool AdjustEffect(Statics.SpellFormEffectsMagnitudeMapping spellToModify)
         {
             if (!this._state.LinkCache.TryResolve<ISpellGetter>(spellToModify.SpellForm.FormKey, out var spell))
             {
