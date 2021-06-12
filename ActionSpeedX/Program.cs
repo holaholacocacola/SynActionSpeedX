@@ -2,17 +2,22 @@ using System;
 using System.IO;
 using System.Linq;
 using Mutagen.Bethesda;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Synthesis;
 using Mutagen.Bethesda.Skyrim;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+
+using ActionSpeedX.Patchers;
 
 namespace ActionSpeedX
 {
     public class Program
     {
         static Lazy<Settings> LazySettings = new Lazy<Settings>();
-        static Settings Settings => LazySettings.Value;
+        static Settings Settings           => LazySettings.Value;
+        static ModKey Adamant              = ModKey.FromNameAndExtension("Adamant.esp");
+        static ModKey Vokrii               = ModKey.FromNameAndExtension("Vokrii - Minimalistic Perks of Skyrim.esp");
+        static ModKey Ordinator            = ModKey.FromNameAndExtension("Ordinator - Perks Of Skyrim.esp");
 
         public static async Task<int> Main(string[] args)
         {
@@ -49,24 +54,55 @@ namespace ActionSpeedX
             Console.WriteLine("[{0}]", string.Join(", ", foundFiles));
             
             if (! requiredFiles.All(value => foundFiles.Contains(value)))
-                throw new Exception("Missing one of the following json files in the Data folder: armor_descriptions, armor_materials, races"); 
+                throw new Exception("Missing one of the following json files in the Data folder: armor_descriptions, armor_materials, races");
 
-            // PerkMod Patcher. Modifies magnitudes.
-            if (Settings.BalancePerkMods)
+
+            // Perk Patcher. Appends Descriptions and Adds Passives
+            if (state.LoadOrder.ContainsKey(Adamant))
             {
-                ActionSpeedX.SpellPatcher spellPatcher = new SpellPatcher(state, Settings);
-                if(!spellPatcher.PatchSpells()) throw new Exception("Error encountered while balancing perks. Check logs.");
+                Console.WriteLine("Adamant will be patched.");
+                Settings.SetPatchOption(PatchOption.Adamant);
+            }
+            else if (state.LoadOrder.ContainsKey(Ordinator))
+            {
+                Console.WriteLine("Ordinator will be patched.");
+                Settings.SetPatchOption(PatchOption.Ordinator);
             }
 
-            // Armor Patcher. Adds keywords
-            Console.WriteLine("Patching armors");
-            ActionSpeedX.ArmorPatcher armorPatcher = new ArmorPatcher(state, Settings);
-            armorPatcher.PatchArmors();
+            else if (state.LoadOrder.ContainsKey(Vokrii))
+            {
+                Console.WriteLine("Vokrii will be patched.");
+                Settings.SetPatchOption(PatchOption.Vokrii);
+            }
+            // No else as default is vanilla
+            Console.WriteLine("Patching Perks");
 
-            // Npc patcher. AddsPerks
+            // This will attach passive abilities to novice perks.
+            PerkPatcher perkPatcher = new(state, Settings);
+            perkPatcher.Run();
+
+            // Spell Patcher. Modifies magnitudes
+            if (Settings.BalancePerkMods)
+            {
+                Console.WriteLine("Patching Spells");
+                SpellPatcher spellPatcher = new SpellPatcher(state, Settings);
+                spellPatcher.Run();
+            }
+
+            // Global Patcher. Sets Flags for loadscreens and which spells get added onequippedforms.
+            Console.WriteLine("Patching Settings");
+            GlobalPatcher globalPatcher = new GlobalPatcher(state, Settings);
+            globalPatcher.Run();
+
+            // Armor Patcher. Adds keywords that effects work off and attachs form script to armors
+            Console.WriteLine("Patching armors");
+            ArmorPatcher armorPatcher = new ArmorPatcher(state, Settings);
+            armorPatcher.Run();
+
+            // Npc patcher. AddsPerks. Only adds Power Attack/Spell Costs and Novice Perks if the npc has an applicable class for it determined by which settings are enabled. Also adds racials/factions if enabled
             Console.WriteLine("Patching npcs");
-            ActionSpeedX.NpcPatcher npcPatcher = new NpcPatcher(state, Settings);
-            npcPatcher.PatchNpcs();
+            NpcPatcher npcPatcher = new NpcPatcher(state, Settings);
+            npcPatcher.Run();
 
         }
     }
