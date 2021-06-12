@@ -84,7 +84,7 @@ namespace ActionSpeedX
             }
 
             effect.Data.Magnitude = spellToModify.Magnitude;
-            _state.PatchMod.Spells.Add(modifiedSpell);
+            _state.PatchMod.Spells.Set(modifiedSpell);
             return true;
         }
     }

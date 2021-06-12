@@ -15,6 +15,7 @@ namespace Mutagen.Bethesda.FormKeys.SkyrimSE
             public static FormLink<IGlobalGetter> ASX_MagickaRegen => ModKey.MakeFormKey(0xb047);
             public static FormLink<IGlobalGetter> ASX_StaminaRegen => ModKey.MakeFormKey(0xb048);
             public static FormLink<IGlobalGetter> ASX_MoveSpeed    => ModKey.MakeFormKey(0xb041);
+            public static FormLink<IGlobalGetter> ASX_Racials      => ModKey.MakeFormKey(0xDD8f);
         }
     }
 }

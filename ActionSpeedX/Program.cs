@@ -84,6 +84,7 @@ namespace ActionSpeedX
             // Spell Patcher. Modifies magnitudes
             if (Settings.BalancePerkMods)
             {
+                Console.WriteLine("Patching Spells");
                 SpellPatcher spellPatcher = new SpellPatcher(state, Settings);
                 spellPatcher.Run();
             }

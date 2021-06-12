@@ -47,8 +47,8 @@ namespace ActionSpeedX.Patchers
                 new SpellFormEffectsMagnitudeMapping(Adamant.Spell.MAG_PerkAgility60, 0, 10.0f, "MAG_PerkAgility60")
             },
             new List<SpellFormEffectsMagnitudeMapping> {
-                new SpellFormEffectsMagnitudeMapping(Adamant.Spell.MAG_PerkAgility30, 0, 2.5f, "MAG_abAthletics40"),
-                new SpellFormEffectsMagnitudeMapping(Adamant.Spell.MAG_PerkAgility60, 0, 5.0f, "MAG_abAthletics60")
+                new SpellFormEffectsMagnitudeMapping(Adamant.Spell.MAG_abAthletics40, 0, 2.5f, "MAG_abAthletics40"),
+                new SpellFormEffectsMagnitudeMapping(Adamant.Spell.MAG_abAthletics60, 0, 5.0f, "MAG_abAthletics60")
             }
         );
 

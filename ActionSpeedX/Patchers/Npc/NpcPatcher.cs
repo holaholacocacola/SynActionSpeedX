@@ -14,7 +14,7 @@ using System.Linq;
 using Statics = ActionSpeedX.Patchers.NpcStatics;
 using PerkStatics = ActionSpeedX.Patchers.PerkStatics; 
 
-namespace ActionSpeedX
+namespace ActionSpeedX.Patchers
 {
     public class NpcPatcher
     {
@@ -33,7 +33,7 @@ namespace ActionSpeedX
             this._settings            = settings;
             this._validRaces          = LoadRaces();
             this._perksToDistribute   = new();
-            this._perkMapping         = Statics.VanillaSkillPerkMapping;
+            this._perkMapping         = this._settings.GetPatchOption() == PatchOption.Ordinator ? Statics.OrdinatorSkillPerkMapping : Statics.VanillaSkillPerkMapping;
 
             /* ASX-Perf-Refactor. Spells are added on equip. We only need to attach Power Attack and spell cost perks as those use perk entry points.
             if (this.settings.AttackSpeed) perksToAdd.AddRange(ActionSpeedX.FormKeys.Perks.AttackSpeed);

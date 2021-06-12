@@ -30,6 +30,11 @@ namespace ActionSpeedX.Patchers
             if (!_settings.StaminaRegen) DisableGlobal(ActionSpeedX_.Global.ASX_StaminaRegen);
             if (!_settings.MagickaRegen) DisableGlobal(ActionSpeedX_.Global.ASX_MagickaRegen);
             if (!_settings.MoveSpeed) DisableGlobal(ActionSpeedX_.Global.ASX_MoveSpeed);
+            if (!_settings.PowerAttacks) DisableGlobal(ActionSpeedX_.Global.ASX_PowerAttack);
+            if (!_settings.SpellCosts) DisableGlobal(ActionSpeedX_.Global.ASX_SpellCost);
+            if (!_settings.Racials) DisableGlobal(ActionSpeedX_.Global.ASX_Racials);
+
+
         }
 
         private void DisableGlobal(FormLink<IGlobalGetter> global)
