@@ -25,21 +25,18 @@ namespace ActionSpeedX
             bool success;
             if (this._settings.GetPatchOption() == PatchOption.Adamant)
             {
-                Console.WriteLine("Adamant will be patched.");
                 success = RebalancePerks(Statics.AdamantSpellEffectMappings.StaminaSpells, Statics.AdamantSpellEffectMappings.SpeedSpells);
                 if (!success) throw new Exception("Failed to patch adamant");
             }
 
             else if (this._settings.GetPatchOption() == PatchOption.Ordinator)
             {
-                Console.WriteLine("Ordinator will be patched.");
                 success = RebalancePerks(Statics.OrdinatorSpellEffectMappings.StaminaSpells, Statics.OrdinatorSpellEffectMappings.SpeedSpells);
                 if (!success) throw new Exception("Failed to patch ordinator");
             }
 
             else if (this._settings.GetPatchOption() == PatchOption.Vokrii)
             {
-                Console.WriteLine("Vokrii will be patched.");
                 success = RebalancePerks(Statics.VokriiSpellEffectMappings.StaminaSpells, Statics.VokriiSpellEffectMappings.SpeedSpells);
                 if (!success) throw new Exception("Failed to patch vokrii");
             }

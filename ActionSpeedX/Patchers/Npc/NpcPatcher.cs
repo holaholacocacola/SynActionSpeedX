@@ -109,7 +109,6 @@ namespace ActionSpeedX.Patchers
                             {
                                 PerkPlacement p = new PerkPlacement { Rank = 1, Perk = PerkStatics.FactionPerks[wtf.EditorID].FormKey.AsLink<IPerkGetter>() };
                                 npcCopy.Perks.Add(p);
-                                
                             }
                         }
                     }
@@ -122,7 +121,6 @@ namespace ActionSpeedX.Patchers
                         if (this._settings.MoveSpeed)    DistributeClassPerks(npcCopy, this._perkMapping.SpeedSkillPerks, npcClass);
                         if (this._settings.AttackSpeed)  DistributeClassPerks(npcCopy, this._perkMapping.AttackSpeedSkillPerks, npcClass);
                         if (this._settings.RangedAttack) DistributeClassPerks(npcCopy, this._perkMapping.RangedAttackSkillPerks, npcClass);
-
                     }
 
                 } catch (Exception e) 
