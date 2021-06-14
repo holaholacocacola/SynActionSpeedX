@@ -25,25 +25,48 @@ namespace ActionSpeedX
             bool success;
             if (this._settings.GetPatchOption() == PatchOption.Adamant)
             {
-                success = RebalancePerks(Statics.AdamantSpellEffectMappings.StaminaSpells, Statics.AdamantSpellEffectMappings.SpeedSpells);
+                success = RebalanceSpells(Statics.AdamantSpellEffectMappings.StaminaSpells, Statics.AdamantSpellEffectMappings.SpeedSpells) && UpdatePerkDescriptions(Statics.AdamantPerkMappings);
                 if (!success) throw new Exception("Failed to patch adamant");
             }
 
             else if (this._settings.GetPatchOption() == PatchOption.Ordinator)
             {
-                success = RebalancePerks(Statics.OrdinatorSpellEffectMappings.StaminaSpells, Statics.OrdinatorSpellEffectMappings.SpeedSpells);
+                success = RebalanceSpells(Statics.OrdinatorSpellEffectMappings.StaminaSpells, Statics.OrdinatorSpellEffectMappings.SpeedSpells) && UpdatePerkDescriptions(Statics.EnaiPerkMappings);
                 if (!success) throw new Exception("Failed to patch ordinator");
             }
 
             else if (this._settings.GetPatchOption() == PatchOption.Vokrii)
             {
-                success = RebalancePerks(Statics.VokriiSpellEffectMappings.StaminaSpells, Statics.VokriiSpellEffectMappings.SpeedSpells);
+                success = RebalanceSpells(Statics.VokriiSpellEffectMappings.StaminaSpells, Statics.VokriiSpellEffectMappings.SpeedSpells) && UpdatePerkDescriptions(Statics.EnaiPerkMappings);
                 if (!success) throw new Exception("Failed to patch vokrii");
             }
            
         }
 
-        private bool RebalancePerks(List<Statics.SpellFormEffectsMagnitudeMapping> staminaSpells, List<Statics.SpellFormEffectsMagnitudeMapping> speedSpells)
+        private bool UpdatePerkDescriptions(Statics.PerkDescriptionMappings perkMap)
+        {
+            if (this._settings.StaminaRegen && !UpdatePerkDescription(perkMap.StaminaPerks)) return false;
+            if (this._settings.MoveSpeed && !UpdatePerkDescription(perkMap.SpeedPerks)) return false;
+            return true;
+        }
+
+        private bool UpdatePerkDescription(List<Statics.PerkDescriptionMapping> perkUps)
+        {
+            foreach (var perkUp in perkUps)
+            {
+                if (!this._state.LinkCache.TryResolve<IPerkGetter>(perkUp.PerkForm.FormKey, out var perk))
+                {
+                    Console.Out.WriteLine($"Could not resolve form key for: {perkUp}");
+                    return false;
+                }
+                var perkUpdate = perk.DeepCopy();
+                perkUpdate.Description = perkUp.Description;
+                _state.PatchMod.Perks.Set(perkUpdate); // not thread safe
+            }
+            return true;
+        }
+
+        private bool RebalanceSpells(List<Statics.SpellFormEffectsMagnitudeMapping> staminaSpells, List<Statics.SpellFormEffectsMagnitudeMapping> speedSpells)
         {
             bool hasError = false;
             if (this._settings.StaminaRegen)
