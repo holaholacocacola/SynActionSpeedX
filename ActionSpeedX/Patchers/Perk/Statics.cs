@@ -10,14 +10,14 @@ namespace ActionSpeedX.Patchers
     public static class PerkStatics
     {
         // Unfortunately, these all must be const. No string subst
-        const string ALTERATION_DESC = " Levels in alteration will increase magicka regeneration  up to 5%.";
-        const string CONJURATION_DESC = " Levels in conjuration will increase magicka regeneration  up to 5%.";
-        const string DESTRUCTION_DESC = " Levels in destruction will increase magicka regeneration  up to 5%.";
-        const string ILLUSION_DESC = " Levels in illusion will increase magicka regeneration  up to 5%.";
-        const string RESTORATION_DESC = " Levels in restoration will increase magicka regeneration  up to 5%.";
+        const string ALTERATION_DESC = " Levels in Alteration will increase Magicka regeneration up to 5%.";
+        const string CONJURATION_DESC = " Levels in Conjuration will increase Magicka regeneration up to 5%.";
+        const string DESTRUCTION_DESC = " Levels in Eestruction will increase Magicka regeneration up to 5%.";
+        const string ILLUSION_DESC = " Levels in Illusion will increase Magicka regeneration up to 5%.";
+        const string RESTORATION_DESC = " Levels in Restoration will increase Magicka regeneration up to 5%.";
 
-        const string LIGHT_STAMINA_DESC = " Levels in Light Armor will increase stamina regeneration up to 10%.";
-        const string HEAVY_STAMINA_DESC = " Levels in Heavy Armor will increase stamina regeneration up to 20%.";
+        const string LIGHT_STAMINA_DESC = " Levels in Light Armor will increase Stamina regeneration up to 10%.";
+        const string HEAVY_STAMINA_DESC = " Levels in Heavy Armor will increase Stamina regeneration up to 20%.";
 
         const string LIGHT_MOVE_DESC = " Levels in Light Armor will increase movement speed up to 10%.";
         const string HEAVY_MOVE_DESC = " Levels in Heavy Armor will increase movement speed up to 14%.";
