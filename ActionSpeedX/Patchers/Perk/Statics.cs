@@ -12,7 +12,7 @@ namespace ActionSpeedX.Patchers
         // Unfortunately, these all must be const. No string subst
         const string ALTERATION_DESC = " Levels in Alteration will increase Magicka regeneration up to 5%.";
         const string CONJURATION_DESC = " Levels in Conjuration will increase Magicka regeneration up to 5%.";
-        const string DESTRUCTION_DESC = " Levels in Eestruction will increase Magicka regeneration up to 5%.";
+        const string DESTRUCTION_DESC = " Levels in Destruction will increase Magicka regeneration up to 5%.";
         const string ILLUSION_DESC = " Levels in Illusion will increase Magicka regeneration up to 5%.";
         const string RESTORATION_DESC = " Levels in Restoration will increase Magicka regeneration up to 5%.";
 
