@@ -87,11 +87,15 @@ namespace ActionSpeedX.Patchers
                         npcCopy.Perks.Add(p);
                     }
 
-                    if (npc.EditorID == "Player" && this._settings.Racials)
+                    if (npc.EditorID == "Player")
                     {
+                        if (this._settings.Racials)
+                        {
+                            PerkPlacement p = new PerkPlacement { Rank = 1, Perk = ActionSpeedX_.Perk.ASX_DummyPerk.FormKey.AsLink<IPerkGetter>() };
+                            npcCopy.Perks.Add(p);
+                        }
                         // a quest runs after racemenu that will sift and apply the correct racial perk. This perk is removed after. 
-                        PerkPlacement p = new PerkPlacement { Rank = 1, Perk = ActionSpeedX_.Perk.ASX_DummyPerk.FormKey.AsLink<IPerkGetter>() };
-                        npcCopy.Perks.Add(p);
+
                         continue;
                     }
 
