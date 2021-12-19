@@ -7,8 +7,12 @@
 	"ArmorMaterialStudded": 1,
 	"ArmorMaterialThievesGuild": 1,
 	"DLC1ArmorMaterialVampire": 1,
+	"IAKBandana": 1,
+	"IAKMaterialIron": 1,
+	"Survival_ArmorWarm": 1,
 	"WAF_ArmorMaterialDraugr": 1,
-
+	"WeapMaterialWood": 1,
+ 
 	"ArmorMaterialBearStormcloak": 2,
 	"ArmorMaterialDwarven": 2,
 	"ArmorMaterialElven": 2,
@@ -29,7 +33,13 @@
 	"DLC2ArmorMaterialBonemoldLight": 2,
 	"DLC2ArmorMaterialMoragTong": 2,
 	"DLC2dunHaknirArmor": 2,
-
+	"IAKMaterialElven": 2,
+	"IAKMaterialSteel": 2,
+	"IAKMaterialSteelChain": 2,
+	"IAKMaterialLeather": 2,
+	"IAKMaterialDwarven": 2,
+	"IAKMaterialAdvancedPlate": 2,
+ 
 	"ArmorMaterialBlades": 3,
 	"ArmorMaterialElvenGilded": 3,
 	"ArmorMaterialGlass": 3,
@@ -37,17 +47,35 @@
 	"ArmorMaterialScaled": 3,
 	"ArmorMaterialSteelPlate": 3,
 	"ArmorMaterialThievesGuildLeader": 3,
+	"ccASVSSE001_ArmorOrdinatorIndoril": 3,
+	"ccBGSSSE025_ArmorMaterialAmber": 3,
+	"ccBGSSSE025_ArmorMaterialDark": 3,
+	"ccBGSSSE025_ArmorMaterialGolden": 3,
 	"DLC1ArmorMaterielFalmerHeavy": 3,
 	"DLC1ArmorMaterielFalmerHeavyOriginal": 3,
 	"DLC2ArmorMaterialChitinHeavy": 3,
 	"DLC2ArmorMaterialChitinLight": 3,
 	"DLC2ArmorMaterialNordicHeavy": 3,
 	"DLC2ArmorMaterialNordicLight": 3,
-
+	"IAKMaterialAdvancedPlate": 3,
+	"IAKMaterialAdvancedScale": 3,
+	"IAKMaterialGlass": 3,
+	"IAKMaterialOrcish": 3,
+	"WAF_MaterialNordic": 3,
+ 
 	"ArmorMaterialDaedric": 4,
 	"ArmorMaterialDragonplate": 4,
 	"ArmorMaterialDragonscale": 4,
 	"ArmorMaterialEbony": 4,
 	"DLC2ArmorMaterialStalhrimHeavy": 4,
-	"DLC2ArmorMaterialStalhrimLight": 4
+	"DLC2ArmorMaterialStalhrimLight": 4,
+	"IAKMaterialDaedric": 4,
+	"IAKMaterialDragonPlate": 4,
+	"IAKMaterialDragonScale": 4,
+	"IAKMaterialDwarven": 4,
+	"IAKMaterialEbony":4,
+	"ccASVSSE001_ArmorOrdinator": 4,
+	"ccBGSSSE025_ArmorMaterialGolden": 4,
+	"ccBGSSSE025_ArmorMaterialMadness": 4
+	
 }
